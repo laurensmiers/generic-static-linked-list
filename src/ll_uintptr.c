@@ -32,17 +32,17 @@ void ll_remove_node(uintptr_t *root, uintptr_t node, uint32_t offset)
     return;
   }
 
-  curr = *(root + offset);
+  curr = *root + offset;
   do {
-    if (curr == node) {
+    if (curr - offset == node) {
       break;
     }
     prev = curr;
-    curr = *(uintptr_t *)curr;
-  } while(curr);
+    curr = *(uintptr_t *)(curr) + offset;
+  } while(curr - offset);
   
   /* element not found */
-  if (!curr)
+  if (!(curr - offset))
     return;
 
   if (!prev) {
