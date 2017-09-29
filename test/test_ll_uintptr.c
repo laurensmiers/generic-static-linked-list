@@ -169,7 +169,11 @@ void test_ll_print(void)
   print(root);
 
   printf("------------\n");
-  ll_remove_node((uintptr_t *)&root, (uintptr_t)&list[0]);
+  printf("remove root...\n");  
+  ll_remove_node((uintptr_t *)&root, (uintptr_t)root);
   printf("------------\n");
   print(root);  
 }
+
+
+
