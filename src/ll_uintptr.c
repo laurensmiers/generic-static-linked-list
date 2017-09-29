@@ -1,29 +1,30 @@
 #include "ll_uintptr.h"
 
-void ll_add_node(uintptr_t *root, uintptr_t new_node)
+void ll_add_node(uintptr_t *root, uintptr_t new_node, uint32_t offset)
 {
   uintptr_t temp=0, end=0;
 
   if (!*root || !new_node) {
     *root = new_node;
-    new_node = 0;
+    *(uintptr_t *)((uintptr_t)new_node + offset) = 0;
+    return;
   }
 
-  temp = *root;
+  temp = *root + offset;
   do {
-    if (temp == new_node) {
+    if (temp - offset == new_node) {
       return;
     }
     end = temp;
-    temp = *(uintptr_t *)temp;
-  } while(temp);
+    temp = *(uintptr_t *)(temp) + offset;
+  } while(temp - offset);
 
   *(uintptr_t *)end = new_node;
   
   return;
 }
 
-void ll_remove_node(uintptr_t *root, uintptr_t node)
+void ll_remove_node(uintptr_t *root, uintptr_t node, uint32_t offset)
 {
   uintptr_t prev=0, curr=0;
 
@@ -31,7 +32,7 @@ void ll_remove_node(uintptr_t *root, uintptr_t node)
     return;
   }
 
-  curr = *root;
+  curr = *(root + offset);
   do {
     if (curr == node) {
       break;
