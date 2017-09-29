@@ -49,8 +49,10 @@ void ll_remove_node(uintptr_t *root, uintptr_t node, uint32_t offset)
   if (prev == *root) {
     /* Trying to delete root */
     *(uintptr_t *)root = *(uintptr_t *)curr;
+    *(uintptr_t *)(prev + offset) = 0;
   } else {
     /* Normal deletion */
     *(uintptr_t *)prev = *(uintptr_t *)curr;
+    *(uintptr_t *)curr = 0;
   }
 }
