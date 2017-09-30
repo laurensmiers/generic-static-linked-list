@@ -191,6 +191,25 @@ void test_ll_RemovingRootNodeShouldResultInNewRoot(void)
   }
 }
 
+void test_ll_RemovingUnAddedNode(void)
+{
+  ll_t *root = NULL;
+  ll_t unAddedNode = {
+    .a = 12345,
+    .next = 0x12345,
+  };
+
+  link_array(&root);
+
+  TEST_ASSERT_MESSAGE(ll_remove_node((uintptr_t *)&root, (uintptr_t)&unAddedNode, offsetof(ll_t, next)) == ll_status_Error,
+		      "Removing non-existant node should result in error code"
+		      );
+
+  for(int i = 0; i < NUMBER - 1; ++i) {
+    TEST_ASSERT_MESSAGE(list[i].next == (uintptr_t)&list[i+1], "link should still be there");
+  }
+}
+
 void test_ll_removeRootAndAddItAgain(void)
 {
   ll_t *root = NULL;
