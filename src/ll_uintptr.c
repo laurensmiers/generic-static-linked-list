@@ -51,8 +51,9 @@ ll_status_t ll_remove_node(uintptr_t *root, uintptr_t node, uint32_t offset)
   } while(curr - offset);
 
   /* element not found */
-  if (!(curr - offset))
+  if (!(curr - offset)) {
     return ll_status_Error;
+  }
 
   if (prev == *root) {
     /* Trying to delete root */
