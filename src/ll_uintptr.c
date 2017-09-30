@@ -1,13 +1,17 @@
 #include "ll_uintptr.h"
 
-void ll_add_node(uintptr_t *root, uintptr_t new_node, uint32_t offset)
+ll_status_t ll_add_node(uintptr_t *root, uintptr_t new_node, uint32_t offset)
 {
   uintptr_t temp=0, end=0;
 
-  if (!*root || !new_node) {
+  if (!root || !new_node) {
+    return ll_status_Error;
+  }
+
+  if (!*root) {
     *root = new_node;
     *(uintptr_t *)((uintptr_t)new_node + offset) = 0;
-    return;
+    return ll_status_OK;
   }
 
   temp = *root + offset;
@@ -21,15 +25,15 @@ void ll_add_node(uintptr_t *root, uintptr_t new_node, uint32_t offset)
 
   *(uintptr_t *)end = new_node;
   
-  return;
+  return ll_status_OK;
 }
 
-void ll_remove_node(uintptr_t *root, uintptr_t node, uint32_t offset)
+ll_status_t ll_remove_node(uintptr_t *root, uintptr_t node, uint32_t offset)
 {
   uintptr_t prev=0, curr=0;
 
   if (!root || !node) {
-    return;
+    return ll_status_Error;
   }
 
   prev = *root;
@@ -55,4 +59,6 @@ void ll_remove_node(uintptr_t *root, uintptr_t node, uint32_t offset)
     *(uintptr_t *)prev = *(uintptr_t *)curr;
     *(uintptr_t *)curr = 0;
   }
+
+  return ll_status_OK;
 }

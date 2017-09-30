@@ -24,6 +24,12 @@ void tearDown(void)
 {
 }
 
+static void link_array(ll_t **root) {
+  for(int i = 0; i < NUMBER; ++i) {
+    ll_add_node((uintptr_t *)root, (uintptr_t)&list[i], offsetof(ll_t, next));
+  }
+}
+
 static void print_node(ll_t *l)
 {
   printf("\n");  
@@ -52,7 +58,50 @@ static void print(ll_t *root)
   }
 }
 
-void test_ll_0(void)
+void test_ll_add_node_paramCheck(void)
+{
+  ll_t *root = NULL;
+
+  list[0].next = 0;
+  list[0].a = 100;
+  
+  TEST_ASSERT_MESSAGE(ll_add_node(NULL, (uintptr_t)&list[0], offsetof(ll_t, next)) == ll_status_Error,
+		      "Passing NULL should result in error code (1)"
+		      );
+
+  TEST_ASSERT_MESSAGE(list[0].next == 0, "node should remain unaltered (1)");
+  TEST_ASSERT_MESSAGE(list[0].a == 100, "node should remain unaltered (2)");
+
+  TEST_ASSERT_MESSAGE(ll_add_node((uintptr_t *)&root, (uintptr_t)NULL, offsetof(ll_t, next)) == ll_status_Error,
+		      "Passing NULL should result in error code (2)"
+		      );
+
+  TEST_ASSERT_MESSAGE(ll_add_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next)) == ll_status_OK,
+		      "Passing valid args should result in success status code"
+		      );
+  
+}
+
+void test_ll_remove_node_paramCheck(void)
+{
+  ll_t *root = NULL;
+
+  TEST_ASSERT_MESSAGE(ll_remove_node(NULL, (uintptr_t)&list[0], offsetof(ll_t, next)) == ll_status_Error,
+		      "Passing NULL should result in error code (1)"
+		      );
+  TEST_ASSERT_MESSAGE(ll_remove_node((uintptr_t *)&root, (uintptr_t)NULL, offsetof(ll_t, next)) == ll_status_Error,
+		      "Passing NULL should result in error code (2)"
+		      );
+  
+  /* Passing valid args, this requires a valid linked list */
+  link_array(&root);
+
+  TEST_ASSERT_MESSAGE(ll_remove_node((uintptr_t *)&root, (uintptr_t)&list[1], offsetof(ll_t, next)) == ll_status_OK,
+  		      "Passing valid args should result in success status code"
+  		      );
+}
+
+void test_ll_rootInit(void)
 {
   ll_t *root = NULL;
 
