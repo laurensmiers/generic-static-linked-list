@@ -105,12 +105,20 @@ void test_ll_rootInit(void)
 {
   ll_t *root = NULL;
 
+  /**
+   *  Some init values
+   *  Fake a link by setting link to a value
+   */
+  list[0].a = 100;
+  list[0].next = 0x12345;
+
   ll_add_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next));
 
   TEST_ASSERT_MESSAGE(root == &list[0], "root should be set");
+  TEST_ASSERT_MESSAGE(root->next == 0, "root nextNode should be set to 0");
 }
 
-void test_ll_1(void)
+void test_ll_AddingOneElement(void)
 {
   ll_t *root = NULL;
 
@@ -120,7 +128,7 @@ void test_ll_1(void)
   TEST_ASSERT_MESSAGE(list[0].next == (uintptr_t)&list[1], "link should be present");
 }
 
-void test_ll_2(void)
+void test_ll_addingSameElement(void)
 {
   ll_t *root = NULL;
   
@@ -130,7 +138,7 @@ void test_ll_2(void)
   TEST_ASSERT_MESSAGE(!list[0].next, "Adding same element should not be possible");
 }
 
-void test_ll_3(void)
+void test_ll_AddingSeveralNodes(void)
 {
   ll_t *root = NULL;
 
@@ -143,7 +151,7 @@ void test_ll_3(void)
   }
 }
 
-void test_ll_4(void)
+void test_ll_SanityCheckWhenDoingBadRemove(void)
 {
   ll_t *root = NULL;
 
@@ -159,7 +167,7 @@ void test_ll_4(void)
   
 }
 
-void test_ll_5(void)
+void test_ll_RemovingOneNode(void)
 {
   ll_t *root = NULL;
 
@@ -175,7 +183,7 @@ void test_ll_5(void)
   }
 }
   
-void test_ll_6(void)
+void test_ll_RemovingRootNodeShouldResultInNewRoot(void)
 {
   ll_t *root = NULL;
 
