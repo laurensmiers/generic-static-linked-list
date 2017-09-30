@@ -32,9 +32,9 @@ static void link_array(ll_t **root) {
 
 static void print_node(ll_t *l)
 {
-  printf("\n");  
+  printf("\n");
   printf("NODE, address: %p\n", (uintptr_t)l);
-  printf("next: %p\n", l->next);  
+  printf("next: %p\n", l->next);
   printf("a: %d\n", l->a);
   printf("\n");
 }
@@ -64,7 +64,7 @@ void test_ll_add_node_paramCheck(void)
 
   list[0].next = 0;
   list[0].a = 100;
-  
+
   TEST_ASSERT_MESSAGE(ll_add_node(NULL, (uintptr_t)&list[0], offsetof(ll_t, next)) == ll_status_Error,
 		      "Passing NULL should result in error code (1)"
 		      );
@@ -79,7 +79,7 @@ void test_ll_add_node_paramCheck(void)
   TEST_ASSERT_MESSAGE(ll_add_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next)) == ll_status_OK,
 		      "Passing valid args should result in success status code"
 		      );
-  
+
 }
 
 void test_ll_remove_node_paramCheck(void)
@@ -92,13 +92,13 @@ void test_ll_remove_node_paramCheck(void)
   TEST_ASSERT_MESSAGE(ll_remove_node((uintptr_t *)&root, (uintptr_t)NULL, offsetof(ll_t, next)) == ll_status_Error,
 		      "Passing NULL should result in error code (2)"
 		      );
-  
+
   /* Passing valid args, this requires a valid linked list */
   link_array(&root);
 
   TEST_ASSERT_MESSAGE(ll_remove_node((uintptr_t *)&root, (uintptr_t)&list[1], offsetof(ll_t, next)) == ll_status_OK,
-  		      "Passing valid args should result in success status code"
-  		      );
+		      "Passing valid args should result in success status code"
+		      );
 }
 
 void test_ll_rootInit(void)
@@ -131,7 +131,7 @@ void test_ll_AddingOneElement(void)
 void test_ll_addingSameElement(void)
 {
   ll_t *root = NULL;
-  
+
   ll_add_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next));
   ll_add_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next));
 
@@ -142,7 +142,7 @@ void test_ll_AddingSeveralNodes(void)
 {
   ll_t *root = NULL;
 
-  link_array(&root);  
+  link_array(&root);
 
   for(int i = 0; i < NUMBER - 1; ++i) {
     TEST_ASSERT_MESSAGE(list[i].next == (uintptr_t)&list[i+1], "link should be fully complete");
@@ -173,15 +173,18 @@ void test_ll_RemovingOneNode(void)
   ll_t *root = NULL;
 
   link_array(&root);
-  
+
   ll_remove_node((uintptr_t *)&root, (uintptr_t)&list[1], offsetof(ll_t, next));
-  
-  TEST_ASSERT_MESSAGE(list[0].next == (uintptr_t)&list[2], "removing node that is not root should NOT result in losing link");
+
+  TEST_ASSERT_MESSAGE(list[0].next == (uintptr_t)&list[2],
+		      "removing node that is not root should NOT result in losing link"
+		      );
+
   for(int i = 2; i < NUMBER - 1; ++i) {
     TEST_ASSERT_MESSAGE(list[i].next == (uintptr_t)&list[i+1], "link should still be there");
   }
 }
-  
+
 void test_ll_RemovingRootNodeShouldResultInNewRoot(void)
 {
   ll_t *root = NULL;
@@ -189,7 +192,7 @@ void test_ll_RemovingRootNodeShouldResultInNewRoot(void)
   link_array(&root);
 
   ll_remove_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next));
-  
+
   TEST_ASSERT_MESSAGE(root == &list[1], "removing root should result in next node to be root");
   for(int i = 1; i < NUMBER - 1; ++i) {
     TEST_ASSERT_MESSAGE(list[i].next == (uintptr_t)&list[i+1], "link should still be there");
@@ -266,6 +269,3 @@ void test_ll_removeNodendAddItAgain(void)
   print(root);
   printf("------------\n");
 }
-
-
-

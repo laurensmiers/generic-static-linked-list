@@ -24,7 +24,7 @@ ll_status_t ll_add_node(uintptr_t *root, uintptr_t new_node, uint32_t offset)
   } while(temp - offset);
 
   *(uintptr_t *)end = new_node;
-  
+
   return ll_status_OK;
 }
 
@@ -45,7 +45,7 @@ ll_status_t ll_remove_node(uintptr_t *root, uintptr_t node, uint32_t offset)
     prev = curr;
     curr = *(uintptr_t *)(curr) + offset;
   } while(curr - offset);
-  
+
   /* element not found */
   if (!(curr - offset))
     return ll_status_Error;

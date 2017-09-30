@@ -6,7 +6,7 @@
 typedef enum {
   ll_status_OK    = 0,
   ll_status_Error = 1,
-  ll_status_Count,  
+  ll_status_Count,
 } ll_status_t;
 
 ll_status_t ll_add_node(uintptr_t *root, uintptr_t new_node, uint32_t offset);
