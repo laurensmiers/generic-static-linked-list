@@ -160,7 +160,12 @@ void test_ll_SanityCheckWhenDoingBadRemove(void)
   for(int i = 0; i < NUMBER - 1; ++i) {
     TEST_ASSERT_MESSAGE(list[i].next == (uintptr_t)&list[i+1], "link should still be fully complete");
   }
-  
+
+  ll_remove_node((uintptr_t *)&root, NULL, offsetof(ll_t, next));
+
+  for(int i = 0; i < NUMBER - 1; ++i) {
+    TEST_ASSERT_MESSAGE(list[i].next == (uintptr_t)&list[i+1], "link should still be fully complete");
+  }
 }
 
 void test_ll_RemovingOneNode(void)
