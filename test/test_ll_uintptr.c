@@ -133,7 +133,9 @@ void test_ll_addingSameElement(void)
   ll_t *root = NULL;
 
   ll_add_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next));
-  ll_add_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next));
+  TEST_ASSERT_MESSAGE(ll_add_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next)) == ll_status_OK,
+		      "Adding same element should not be an error"
+		      );
 
   TEST_ASSERT_MESSAGE(!list[0].next, "Adding same element should not be possible");
 }
@@ -161,7 +163,7 @@ void test_ll_SanityCheckWhenDoingBadRemove(void)
     TEST_ASSERT_MESSAGE(list[i].next == (uintptr_t)&list[i+1], "link should still be fully complete");
   }
 
-  ll_remove_node((uintptr_t *)&root, NULL, offsetof(ll_t, next));
+  ll_remove_node((uintptr_t *)&root, (uintptr_t)NULL, offsetof(ll_t, next));
 
   for(int i = 0; i < NUMBER - 1; ++i) {
     TEST_ASSERT_MESSAGE(list[i].next == (uintptr_t)&list[i+1], "link should still be fully complete");

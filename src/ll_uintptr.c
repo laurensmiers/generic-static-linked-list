@@ -17,7 +17,7 @@ ll_status_t ll_add_node(uintptr_t *root, uintptr_t new_node, uint32_t offset)
   temp = *root + offset;
   do {
     if (temp - offset == new_node) {
-      return;
+      return ll_status_OK;
     }
     end = temp;
     temp = *(uintptr_t *)(temp) + offset;
