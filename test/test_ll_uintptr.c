@@ -10,7 +10,7 @@ typedef struct {
   uintptr_t next;
 } ll_t;
 
-ll_t list[NUMBER];
+static ll_t list[NUMBER];
 
 void setUp(void)
 {
@@ -142,7 +142,7 @@ void test_ll_6(void)
   }
 }
 
-void test_ll_print(void)
+void test_ll_removeRootAndAddItAgain(void)
 {
   ll_t *root = NULL;
 
@@ -167,11 +167,37 @@ void test_ll_print(void)
   print(root);
   printf("------------\n");
 
-  /* printf("------------\n"); */
-  /* printf("add list[0]...\n"); */
-  /* ll_add_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next)); */
-  /* print(root); */
-  /* printf("------------\n"); */
+  printf("------------\n");
+  printf("add list[0]...\n");
+  ll_add_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next));
+  print(root);
+  printf("------------\n");
+}
+
+void test_ll_removeNodendAddItAgain(void)
+{
+  ll_t *root = NULL;
+
+  for(int i = 0; i < NUMBER; ++i) {
+    ll_add_node((uintptr_t *)&root, (uintptr_t)&list[i], offsetof(ll_t, next));
+  }
+
+
+  printf("------------\n");
+  print(root);
+  printf("------------\n");
+
+  printf("------------\n");
+  printf("remove node...\n");
+  ll_remove_node((uintptr_t *)&root, (uintptr_t)&list[2], offsetof(ll_t, next));
+  print(root);
+  printf("------------\n");
+
+  printf("------------\n");
+  printf("add node...\n");
+  ll_add_node((uintptr_t *)&root, (uintptr_t)&list[2], offsetof(ll_t, next));
+  print(root);
+  printf("------------\n");
 }
 
 
