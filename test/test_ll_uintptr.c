@@ -93,6 +93,10 @@ void test_ll_remove_node_paramCheck(void)
 		      "Passing NULL should result in error code (2)"
 		      );
 
+  TEST_ASSERT_MESSAGE(ll_remove_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next)) == ll_status_Error,
+		      "Passing pointer to NULL root should result in error code"
+		      );
+
   /* Passing valid args, this requires a valid linked list */
   link_array(&root);
 

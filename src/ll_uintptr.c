@@ -36,6 +36,10 @@ ll_status_t ll_remove_node(uintptr_t *root, uintptr_t node, uint32_t offset)
     return ll_status_Error;
   }
 
+  if (!*root) {
+    return ll_status_Error;
+  }
+
   prev = *root;
   curr = *root + offset;
   do {
