@@ -142,9 +142,7 @@ void test_ll_AddingSeveralNodes(void)
 {
   ll_t *root = NULL;
 
-  for(int i = 0; i < NUMBER; ++i) {
-    ll_add_node((uintptr_t *)&root, (uintptr_t)&list[i], offsetof(ll_t, next));
-  }
+  link_array(&root);  
 
   for(int i = 0; i < NUMBER - 1; ++i) {
     TEST_ASSERT_MESSAGE(list[i].next == (uintptr_t)&list[i+1], "link should be fully complete");
@@ -155,9 +153,7 @@ void test_ll_SanityCheckWhenDoingBadRemove(void)
 {
   ll_t *root = NULL;
 
-  for(int i = 0; i < NUMBER; ++i) {
-    ll_add_node((uintptr_t *)&root, (uintptr_t)&list[i], offsetof(ll_t, next));
-  }
+  link_array(&root);
 
   ll_remove_node(NULL, (uintptr_t)&list[1], offsetof(ll_t, next));
 
@@ -171,10 +167,8 @@ void test_ll_RemovingOneNode(void)
 {
   ll_t *root = NULL;
 
-  for(int i = 0; i < NUMBER; ++i) {
-    ll_add_node((uintptr_t *)&root, (uintptr_t)&list[i], offsetof(ll_t, next));
-  }
-
+  link_array(&root);
+  
   ll_remove_node((uintptr_t *)&root, (uintptr_t)&list[1], offsetof(ll_t, next));
   
   TEST_ASSERT_MESSAGE(list[0].next == (uintptr_t)&list[2], "removing node that is not root should NOT result in losing link");
@@ -187,9 +181,7 @@ void test_ll_RemovingRootNodeShouldResultInNewRoot(void)
 {
   ll_t *root = NULL;
 
-  for(int i = 0; i < NUMBER; ++i) {
-    ll_add_node((uintptr_t *)&root, (uintptr_t)&list[i], offsetof(ll_t, next));
-  }
+  link_array(&root);
 
   ll_remove_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next));
   
@@ -203,10 +195,7 @@ void test_ll_removeRootAndAddItAgain(void)
 {
   ll_t *root = NULL;
 
-  for(int i = 0; i < NUMBER; ++i) {
-    ll_add_node((uintptr_t *)&root, (uintptr_t)&list[i], offsetof(ll_t, next));
-  }
-
+  link_array(&root);
 
   printf("------------\n");
   print(root);
@@ -235,10 +224,7 @@ void test_ll_removeNodendAddItAgain(void)
 {
   ll_t *root = NULL;
 
-  for(int i = 0; i < NUMBER; ++i) {
-    ll_add_node((uintptr_t *)&root, (uintptr_t)&list[i], offsetof(ll_t, next));
-  }
-
+  link_array(&root);
 
   printf("------------\n");
   print(root);
