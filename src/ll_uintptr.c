@@ -17,7 +17,7 @@ ll_status_t ll_append_node(uintptr_t *root, uintptr_t new_node, uint32_t offset)
     return ll_status_OK;
   }
 
-  ll_foreach(temp, *root, offset) {
+  ll_foreach(*root, temp, offset) {
     if (temp == new_node) {
       /* new_node is already in */
       return ll_status_OK;
@@ -44,7 +44,7 @@ ll_status_t ll_remove_node(uintptr_t *root, uintptr_t node, uint32_t offset)
     return ll_status_Error;
   }
 
-  ll_foreach(curr, *root, offset) {
+  ll_foreach(*root, curr, offset) {
     if (curr == node) {
       break;
     }

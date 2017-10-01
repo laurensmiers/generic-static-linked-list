@@ -270,7 +270,7 @@ void test_ll_foreach(void)
 
     link_array(&root);
 
-    ll_foreach(node, root, offsetof(ll_t, next)) {
+    ll_foreach(root, node, offsetof(ll_t, next)) {
         TEST_ASSERT_MESSAGE(node == &list[i], "Foreach should cycle through linked list");
         i++;
     }
