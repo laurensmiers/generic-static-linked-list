@@ -6,10 +6,12 @@ ll_status_t ll_append_node(uintptr_t *root, uintptr_t new_node, uint32_t offset)
   uintptr_t temp=0, end=0;
 
   if (!root || !new_node) {
+    /* Bad param provided */
     return ll_status_Error;
   }
 
   if (!*root) {
+    /* root is not defined yet, new_node will be root  */
     *root = new_node;
     *(uintptr_t *)((uintptr_t)new_node + offset) = 0;
     return ll_status_OK;
@@ -19,6 +21,7 @@ ll_status_t ll_append_node(uintptr_t *root, uintptr_t new_node, uint32_t offset)
 
   ll_foreach(temp, *root, offset) {
     if (temp == new_node) {
+      /* new_node is already in */
       return ll_status_OK;
     }
     end = temp;
@@ -34,10 +37,12 @@ ll_status_t ll_remove_node(uintptr_t *root, uintptr_t node, uint32_t offset)
   uintptr_t prev=0, curr=0;
 
   if (!root || !node) {
+    /* Bad param provided */
     return ll_status_Error;
   }
 
   if (!*root) {
+    /* Bad param provided, root is not set? */
     return ll_status_Error;
   }
 
@@ -48,13 +53,13 @@ ll_status_t ll_remove_node(uintptr_t *root, uintptr_t node, uint32_t offset)
     prev = curr;
   }
 
-  /* element not found */
   if (!curr) {
+    /* element not found */
     return ll_status_Error;
   }
 
   if (curr == *root) {
-    /* Trying to delete root */
+    /* Trying to delete root, reposition root */
     *(uintptr_t *)root = *(uintptr_t *)(curr + offset);
   } else {
     /* Normal deletion */
@@ -69,6 +74,7 @@ ll_status_t ll_remove_node(uintptr_t *root, uintptr_t node, uint32_t offset)
 uintptr_t ll_next_node(uintptr_t node, uint32_t offset)
 {
     if (!node) {
+        /* Bad param provided */
         return (uintptr_t)NULL;
     }
 
