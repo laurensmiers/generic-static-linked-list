@@ -41,30 +41,29 @@ ll_status_t ll_remove_node(uintptr_t *root, uintptr_t node, uint32_t offset)
     return ll_status_Error;
   }
 
-  prev = *root;
-  curr = *root + offset;
+  prev = curr = *root;
   do {
-    if (curr - offset == node) {
+    if (curr == node) {
       break;
     }
     prev = curr;
-    curr = *(uintptr_t *)(curr) + offset;
-  } while(curr - offset);
+    curr = *(uintptr_t *)(curr + offset);
+  } while(curr);
 
   /* element not found */
-  if (!(curr - offset)) {
+  if (!curr) {
     return ll_status_Error;
   }
 
-  if (prev == *root) {
+  if (curr == *root) {
     /* Trying to delete root */
-    *(uintptr_t *)root = *(uintptr_t *)curr;
-    *(uintptr_t *)(prev + offset) = 0;
+    *(uintptr_t *)root = *(uintptr_t *)(curr + offset);
   } else {
     /* Normal deletion */
-    *(uintptr_t *)prev = *(uintptr_t *)curr;
-    *(uintptr_t *)curr = 0;
+    *(uintptr_t *)(prev + offset) = *(uintptr_t *)(curr + offset);
   }
+
+  *(uintptr_t *)(curr + offset) = 0;
 
   return ll_status_OK;
 }
