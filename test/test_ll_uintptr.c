@@ -223,3 +223,38 @@ void test_ll_RemovingUnAddedNode(void)
     TEST_ASSERT_MESSAGE(list[i].next == (uintptr_t)&list[i+1], "link should still be there");
   }
 }
+
+void test_ll_nextNode_ParamCheck(void)
+{
+  ll_t *root = NULL;
+
+  TEST_ASSERT_MESSAGE(ll_next_node((uintptr_t)NULL, offsetof(ll_t, next)) == (uintptr_t)NULL,
+                      "Passing NULL should return NULL"
+                      );
+
+  /* Set list[0] as root, so only one element in linked list */
+  ll_add_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next));
+
+  TEST_ASSERT_MESSAGE(ll_next_node((uintptr_t)root, offsetof(ll_t, next)) == (uintptr_t)NULL,
+                      "Passing valid linked list with only 1 member should result in next node being NULL"
+                      );
+
+  ll_add_node((uintptr_t *)&root, (uintptr_t)&list[1], offsetof(ll_t, next));
+
+  TEST_ASSERT_MESSAGE(ll_next_node((uintptr_t)root, offsetof(ll_t, next)) == (uintptr_t)&list[1],
+                      "Passing valid linked list with 2 members should result in next node being the one we just added"
+                      );
+}
+
+void test_ll_nextNode_TraverseFullList(void)
+{
+  ll_t *root = NULL;
+  ll_t *node = NULL;
+
+  link_array(&root);
+
+  for(int i = 0; i < NUMBER - 1; ++i) {
+      node = &list[i];
+      TEST_ASSERT_MESSAGE(ll_next_node((uintptr_t)node, offsetof(ll_t,next)) == (uintptr_t)&list[i+1], "next_node should actually return next node");
+  }
+}

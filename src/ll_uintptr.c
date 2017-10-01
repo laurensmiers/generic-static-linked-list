@@ -1,4 +1,5 @@
 #include "ll_uintptr.h"
+#include <stddef.h>
 
 ll_status_t ll_add_node(uintptr_t *root, uintptr_t new_node, uint32_t offset)
 {
@@ -66,4 +67,13 @@ ll_status_t ll_remove_node(uintptr_t *root, uintptr_t node, uint32_t offset)
   }
 
   return ll_status_OK;
+}
+
+uintptr_t ll_next_node(uintptr_t node, uint32_t offset)
+{
+    if (!node) {
+        return (uintptr_t)NULL;
+    }
+
+    return *(uintptr_t *)(node + offset);
 }

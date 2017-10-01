@@ -13,4 +13,6 @@ ll_status_t ll_add_node(uintptr_t *root, uintptr_t new_node, uint32_t offset);
 
 ll_status_t ll_remove_node(uintptr_t *root, uintptr_t node, uint32_t offset);
 
+uintptr_t ll_next_node(uintptr_t node, uint32_t offset);
+
 #endif // _LL_UINTPTR_H
