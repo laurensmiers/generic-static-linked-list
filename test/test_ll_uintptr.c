@@ -180,11 +180,14 @@ void test_ll_RemovingOneNode(void)
 
   link_array(&root);
 
+  TEST_ASSERT_MESSAGE(list[1].next != 0, "Sanity check: Link before removal seems valid");
+
   ll_remove_node((uintptr_t *)&root, (uintptr_t)&list[1], offsetof(ll_t, next));
 
   TEST_ASSERT_MESSAGE(list[0].next == (uintptr_t)&list[2],
 		      "removing node that is not root should NOT result in losing link"
 		      );
+  TEST_ASSERT_MESSAGE(list[1].next == 0, "Link in removed node should be set to 0");
 
   for(int i = 2; i < NUMBER - 1; ++i) {
     TEST_ASSERT_MESSAGE(list[i].next == (uintptr_t)&list[i+1], "link should still be there");
