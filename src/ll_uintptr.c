@@ -16,13 +16,13 @@ ll_status_t ll_append_node(uintptr_t *root, uintptr_t new_node, uint32_t offset)
   }
 
   temp = *root;
-  do {
+
+  ll_foreach(temp, *root, offset) {
     if (temp == new_node) {
       return ll_status_OK;
     }
     end = temp;
-    temp = *(uintptr_t *)(temp + offset);
-  } while(temp);
+  }
 
   *(uintptr_t *)(end + offset) = new_node;
 
@@ -41,14 +41,12 @@ ll_status_t ll_remove_node(uintptr_t *root, uintptr_t node, uint32_t offset)
     return ll_status_Error;
   }
 
-  prev = curr = *root;
-  do {
+  ll_foreach(curr, *root, offset) {
     if (curr == node) {
       break;
     }
     prev = curr;
-    curr = *(uintptr_t *)(curr + offset);
-  } while(curr);
+  }
 
   /* element not found */
   if (!curr) {
