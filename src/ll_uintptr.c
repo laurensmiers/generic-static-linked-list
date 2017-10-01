@@ -1,7 +1,7 @@
 #include "ll_uintptr.h"
 #include <stddef.h>
 
-ll_status_t ll_add_node(uintptr_t *root, uintptr_t new_node, uint32_t offset)
+ll_status_t ll_append_node(uintptr_t *root, uintptr_t new_node, uint32_t offset)
 {
   uintptr_t temp=0, end=0;
 

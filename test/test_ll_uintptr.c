@@ -26,7 +26,7 @@ void tearDown(void)
 
 static void link_array(ll_t **root) {
   for(int i = 0; i < NUMBER; ++i) {
-    ll_add_node((uintptr_t *)root, (uintptr_t)&list[i], offsetof(ll_t, next));
+    ll_append_node((uintptr_t *)root, (uintptr_t)&list[i], offsetof(ll_t, next));
   }
 }
 
@@ -65,18 +65,18 @@ void test_ll_add_node_paramCheck(void)
   list[0].next = 0;
   list[0].a = 100;
 
-  TEST_ASSERT_MESSAGE(ll_add_node(NULL, (uintptr_t)&list[0], offsetof(ll_t, next)) == ll_status_Error,
+  TEST_ASSERT_MESSAGE(ll_append_node(NULL, (uintptr_t)&list[0], offsetof(ll_t, next)) == ll_status_Error,
 		      "Passing NULL should result in error code (1)"
 		      );
 
   TEST_ASSERT_MESSAGE(list[0].next == 0, "node should remain unaltered (1)");
   TEST_ASSERT_MESSAGE(list[0].a == 100, "node should remain unaltered (2)");
 
-  TEST_ASSERT_MESSAGE(ll_add_node((uintptr_t *)&root, (uintptr_t)NULL, offsetof(ll_t, next)) == ll_status_Error,
+  TEST_ASSERT_MESSAGE(ll_append_node((uintptr_t *)&root, (uintptr_t)NULL, offsetof(ll_t, next)) == ll_status_Error,
 		      "Passing NULL should result in error code (2)"
 		      );
 
-  TEST_ASSERT_MESSAGE(ll_add_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next)) == ll_status_OK,
+  TEST_ASSERT_MESSAGE(ll_append_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next)) == ll_status_OK,
 		      "Passing valid args should result in success status code"
 		      );
 
@@ -116,7 +116,7 @@ void test_ll_rootInit(void)
   list[0].a = 100;
   list[0].next = 0x12345;
 
-  ll_add_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next));
+  ll_append_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next));
 
   TEST_ASSERT_MESSAGE(root == &list[0], "root should be set");
   TEST_ASSERT_MESSAGE(root->next == 0, "root nextNode should be set to 0");
@@ -126,8 +126,8 @@ void test_ll_AddingOneElement(void)
 {
   ll_t *root = NULL;
 
-  ll_add_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next));
-  ll_add_node((uintptr_t *)&root, (uintptr_t)&list[1], offsetof(ll_t, next));
+  ll_append_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next));
+  ll_append_node((uintptr_t *)&root, (uintptr_t)&list[1], offsetof(ll_t, next));
 
   TEST_ASSERT_MESSAGE(list[0].next == (uintptr_t)&list[1], "link should be present");
 }
@@ -136,8 +136,8 @@ void test_ll_addingSameElement(void)
 {
   ll_t *root = NULL;
 
-  ll_add_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next));
-  TEST_ASSERT_MESSAGE(ll_add_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next)) == ll_status_OK,
+  ll_append_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next));
+  TEST_ASSERT_MESSAGE(ll_append_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next)) == ll_status_OK,
 		      "Adding same element should not be an error"
 		      );
 
@@ -233,13 +233,13 @@ void test_ll_nextNode_ParamCheck(void)
                       );
 
   /* Set list[0] as root, so only one element in linked list */
-  ll_add_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next));
+  ll_append_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next));
 
   TEST_ASSERT_MESSAGE(ll_next_node((uintptr_t)root, offsetof(ll_t, next)) == (uintptr_t)NULL,
                       "Passing valid linked list with only 1 member should result in next node being NULL"
                       );
 
-  ll_add_node((uintptr_t *)&root, (uintptr_t)&list[1], offsetof(ll_t, next));
+  ll_append_node((uintptr_t *)&root, (uintptr_t)&list[1], offsetof(ll_t, next));
 
   TEST_ASSERT_MESSAGE(ll_next_node((uintptr_t)root, offsetof(ll_t, next)) == (uintptr_t)&list[1],
                       "Passing valid linked list with 2 members should result in next node being the one we just added"

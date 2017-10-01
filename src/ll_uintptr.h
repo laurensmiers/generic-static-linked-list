@@ -9,7 +9,7 @@ typedef enum {
   ll_status_Count,
 } ll_status_t;
 
-ll_status_t ll_add_node(uintptr_t *root, uintptr_t new_node, uint32_t offset);
+ll_status_t ll_append_node(uintptr_t *root, uintptr_t new_node, uint32_t offset);
 
 ll_status_t ll_remove_node(uintptr_t *root, uintptr_t node, uint32_t offset);
 
