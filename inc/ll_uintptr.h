@@ -20,4 +20,9 @@ uintptr_t ll_next_node(uintptr_t node, uint32_t offset);
          (idx) != (typeof(idx))NULL;                                \
          (idx) = (typeof(idx))ll_next_node((uintptr_t)idx, offset))
 
+#define ll_foreach_safe(root, idx, idx2, offset)                        \
+    for ((idx) = (root);                                                \
+         ((idx) != (typeof(idx))NULL) && ((idx2) = (typeof(idx))ll_next_node((uintptr_t)idx, offset), 1); \
+         (idx) = (idx2))
+
 #endif // _LL_UINTPTR_H

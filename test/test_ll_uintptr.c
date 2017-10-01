@@ -276,3 +276,55 @@ void test_ll_foreach(void)
     }
     TEST_ASSERT_MESSAGE(i == NUMBER, "Foreach should cycle through whole list");
 }
+
+void test_ll_foreach_safe(void)
+{
+    ll_t *root = NULL;
+    ll_t *node = NULL, *safe_node = NULL;
+    int i = 0;
+
+    link_array(&root);
+
+    ll_foreach_safe(root, node, safe_node, offsetof(ll_t, next)) {
+        TEST_ASSERT_MESSAGE(node == &list[i], "Foreach should cycle through linked list");
+        i++;
+    }
+    TEST_ASSERT_MESSAGE(i == NUMBER, "Foreach_safe should cycle through whole list");
+}
+
+void test_ll_foreach_safe_RemovalOfNode(void)
+{
+    ll_t *root = NULL;
+    ll_t *node = NULL, *safe_node = NULL;
+    int i = 0;
+
+    link_array(&root);
+
+    ll_foreach_safe(root, node, safe_node, offsetof(ll_t, next)) {
+        if (node == &list[1]) {
+            ll_remove_node((uintptr_t *)&root, (uintptr_t)node, offsetof(ll_t, next));
+        }
+        i++;
+    }
+    TEST_ASSERT_MESSAGE(i == NUMBER, "Foreach_safe should cycle through whole list even if we are deleting nodes in the for");
+    TEST_ASSERT_MESSAGE(root = &list[0], "Root should have been maintained");
+    TEST_ASSERT_MESSAGE(root->next  == (uintptr_t)&list[2], "New link should be set");
+}
+
+void test_ll_foreach_safe_RemovalOfRoot(void)
+{
+    ll_t *root = NULL;
+    ll_t *node = NULL, *safe_node = NULL;
+    int i = 0;
+
+    link_array(&root);
+
+    ll_foreach_safe(root, node, safe_node, offsetof(ll_t, next)) {
+        if (node == &list[0]) {
+            ll_remove_node((uintptr_t *)&root, (uintptr_t)node, offsetof(ll_t, next));
+        }
+        i++;
+    }
+    TEST_ASSERT_MESSAGE(i == NUMBER, "Foreach_safe should cycle through whole list even if we are deleting the root in the for");
+    TEST_ASSERT_MESSAGE(root  == &list[1], "New root should be set");
+}
