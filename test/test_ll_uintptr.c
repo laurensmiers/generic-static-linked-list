@@ -258,3 +258,18 @@ void test_ll_nextNode_TraverseFullList(void)
       TEST_ASSERT_MESSAGE(ll_next_node((uintptr_t)node, offsetof(ll_t,next)) == (uintptr_t)&list[i+1], "next_node should actually return next node");
   }
 }
+
+void test_ll_foreach(void)
+{
+    ll_t *root = NULL;
+    ll_t *node = NULL;
+    int i = 0;
+
+    link_array(&root);
+
+    ll_foreach(node, root, offsetof(ll_t, next)) {
+        TEST_ASSERT_MESSAGE(node == &list[i], "Foreach should cycle through linked list");
+        i++;
+    }
+    TEST_ASSERT_MESSAGE(i == NUMBER, "Foreach should cycle through whole list");
+}
