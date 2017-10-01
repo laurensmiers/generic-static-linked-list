@@ -15,16 +15,16 @@ ll_status_t ll_append_node(uintptr_t *root, uintptr_t new_node, uint32_t offset)
     return ll_status_OK;
   }
 
-  temp = *root + offset;
+  temp = *root;
   do {
-    if (temp - offset == new_node) {
+    if (temp == new_node) {
       return ll_status_OK;
     }
     end = temp;
-    temp = *(uintptr_t *)(temp) + offset;
-  } while(temp - offset);
+    temp = *(uintptr_t *)(temp + offset);
+  } while(temp);
 
-  *(uintptr_t *)end = new_node;
+  *(uintptr_t *)(end + offset) = new_node;
 
   return ll_status_OK;
 }
