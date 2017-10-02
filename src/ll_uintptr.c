@@ -78,3 +78,29 @@ uintptr_t ll_next_node(uintptr_t node, uint32_t offset)
 
     return *(uintptr_t *)(node + offset);
 }
+
+int ll_indexof(uintptr_t *root, uintptr_t node, uint32_t offset)
+{
+    uintptr_t curr=0;
+    int i = 0;
+
+    if (!root || !node) {
+        /* Bad param provided */
+        return -1;
+    }
+
+    if (!*root) {
+        /* Bad param provided */
+        return -1;
+    }
+
+    ll_foreach(*root, curr, offset) {
+        if (curr == node) {
+            /* node found */
+            return i;
+        }
+        i++;
+    }
+
+    return -1;
+}

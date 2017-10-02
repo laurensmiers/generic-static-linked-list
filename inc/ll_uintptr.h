@@ -15,6 +15,8 @@ ll_status_t ll_remove_node(uintptr_t *root, uintptr_t node, uint32_t offset);
 
 uintptr_t ll_next_node(uintptr_t node, uint32_t offset);
 
+int ll_indexof(uintptr_t *root, uintptr_t node, uint32_t offset);
+
 #define ll_foreach(root, idx, offset)                               \
     for ((idx) = (root);                                            \
          (idx) != (typeof(idx))NULL;                                \

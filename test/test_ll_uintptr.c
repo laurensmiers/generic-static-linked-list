@@ -229,7 +229,7 @@ void test_ll_RemovingUnAddedNode(void)
     }
 }
 
-void test_ll_nextNode_ParamCheck(void)
+void test_ll_nextNode_paramCheck(void)
 {
     ll_t *root = NULL;
 
@@ -330,3 +330,39 @@ void test_ll_foreach_safe_RemovalOfRoot(void)
     TEST_ASSERT_MESSAGE(i == NUMBER, "Foreach_safe should cycle through whole list even if we are deleting the root in the for");
     TEST_ASSERT_MESSAGE(root  == &list[1], "New root should be set");
 }
+
+void test_ll_indexof_paramCheck(void)
+{
+    ll_t *root = NULL;
+
+    TEST_ASSERT(ll_indexof((uintptr_t *)NULL, (uintptr_t)NULL, offsetof(ll_t, next)) == -1);
+    TEST_ASSERT(ll_indexof((uintptr_t *)&root, (uintptr_t)NULL, offsetof(ll_t, next)) == -1);
+    TEST_ASSERT(ll_indexof((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next)) == -1);
+
+    /* set root */
+    ll_append_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next));
+
+    TEST_ASSERT(ll_indexof((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next)) == 0);
+}
+
+void test_ll_indexof_elementNotIn(void)
+{
+    ll_t *root = NULL;
+
+    /* set root */
+    ll_append_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next));
+
+    TEST_ASSERT(ll_indexof((uintptr_t *)&root, (uintptr_t)&list[1], offsetof(ll_t, next)) == -1);
+}
+
+void test_ll_indexof_elementIsIn(void)
+{
+    ll_t *root = NULL;
+
+    link_array(&root);
+
+    for(int i = 0; i < NUMBER; ++i) {
+        TEST_ASSERT(ll_indexof((uintptr_t *)&root, (uintptr_t)&list[i], offsetof(ll_t, next)) == i);
+    }
+}
+
