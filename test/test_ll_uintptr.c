@@ -30,6 +30,7 @@ static void link_array(ll_t **root) {
     }
 }
 
+#if 0
 static void print_node(ll_t *l)
 {
     printf("\n");
@@ -57,6 +58,7 @@ static void print(ll_t *root)
         temp = (ll_t *)temp->next;
     }
 }
+#endif
 
 void test_ll_add_node_paramCheck(void)
 {
