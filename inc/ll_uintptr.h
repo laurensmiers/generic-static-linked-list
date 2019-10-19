@@ -1,24 +1,37 @@
 #ifndef _LL_UINTPTR_H
 #define _LL_UINTPTR_H
 
-#include <stdint.h>
+#include <stdbool.h>
 
-int ll_append_node(uintptr_t *root, uintptr_t new_node, uint32_t offset);
+struct ll_node {
+		struct ll_node *next;
+		struct ll_node *prev;
+};
 
-int ll_remove_node(uintptr_t *root, uintptr_t node, uint32_t offset);
+void ll_init(struct ll_node *root);
 
-uintptr_t ll_next_node(uintptr_t node, uint32_t offset);
+int ll_append_node(struct ll_node *root, struct ll_node *new_node);
 
-int ll_indexof(uintptr_t *root, uintptr_t node, uint32_t offset);
+int ll_remove_node(struct ll_node *node);
 
-#define ll_foreach(root, idx, offset)                               \
-    for ((idx) = (root);                                            \
-         (idx) != (typeof(idx))NULL;                                \
-         (idx) = (typeof(idx))ll_next_node((uintptr_t)idx, offset))
+struct ll_node* ll_next_node(struct ll_node *root, struct ll_node *node);
 
-#define ll_foreach_safe(root, idx, idx2, offset)                        \
-    for ((idx) = (root);                                                \
-         ((idx) != (typeof(idx))NULL) && ((idx2) = (typeof(idx))ll_next_node((uintptr_t)idx, offset), 1); \
+int ll_indexof(struct ll_node *root, struct ll_node *node);
+
+#define ll_foreach(root, idx)                               \
+		for ((idx) = (root)->next;								 \
+			 (idx) != (root) && (idx) != NULL;						 \
+			 (idx) = ll_next_node((root),(idx)))
+
+#define ll_foreach_safe(root, idx, idx2)                        \
+    for ((idx) = (root)->next;                                                \
+         (idx) != (root) && (idx) != NULL && (((idx2) = ll_next_node((root), (idx))),1); \
          (idx) = (idx2))
+
+/* int ll_count(struct ll_node *root); */
+
+/* bool ll_is_linked(struct ll_node *root, struct ll_node *node); */
+
+void ll_deinit(struct ll_node *root);
 
 #endif // _LL_UINTPTR_H

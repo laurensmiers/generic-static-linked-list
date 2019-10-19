@@ -1,106 +1,92 @@
 #include "ll_uintptr.h"
 #include <stddef.h>
 
-int ll_append_node(uintptr_t *root, uintptr_t new_node, uint32_t offset)
+void ll_init(struct ll_node *root)
 {
-    uintptr_t temp=0, end=0;
+	if (!root)
+		return;
 
-    if (!root || !new_node) {
-        /* Bad param provided */
-        return -1;
-    }
-
-    if (!*root) {
-        /* root is not defined yet, new_node will be root  */
-        *root = new_node;
-        *(uintptr_t *)((uintptr_t)new_node + offset) = 0;
-        return 0;
-    }
-
-    ll_foreach(*root, temp, offset) {
-        if (temp == new_node) {
-            /* new_node is already in */
-            return 0;
-        }
-        end = temp;
-    }
-
-    *(uintptr_t *)(end + offset) = new_node;
-
-    return 0;
+	root->next = root;
+	root->prev = root;
 }
 
-int ll_remove_node(uintptr_t *root, uintptr_t node, uint32_t offset)
+int ll_append_node(struct ll_node *root, struct ll_node *new_node)
 {
-    uintptr_t prev=0, curr=0;
+	if (!root || !new_node) {
+		/* Bad param provided */
+		return -1;
+	}
 
-    if (!root || !node) {
-        /* Bad param provided */
-        return -1;
-    }
+	struct ll_node *tail = root->prev;
 
-    if (!*root) {
-        /* Bad param provided, root is not set? */
-        return -1;
-    }
+	new_node->next = root;
+	new_node->prev = tail;
+	tail->next = new_node;
+	root->prev = new_node;
 
-    ll_foreach(*root, curr, offset) {
-        if (curr == node) {
-            break;
-        }
-        prev = curr;
-    }
-
-    if (!curr) {
-        /* element not found */
-        return -1;
-    }
-
-    if (curr == *root) {
-        /* Trying to delete root, reposition root */
-        *(uintptr_t *)root = *(uintptr_t *)(curr + offset);
-    } else {
-        /* Normal deletion */
-        *(uintptr_t *)(prev + offset) = *(uintptr_t *)(curr + offset);
-    }
-
-    *(uintptr_t *)(curr + offset) = 0;
-
-    return 0;
+	return 0;
 }
 
-uintptr_t ll_next_node(uintptr_t node, uint32_t offset)
+struct ll_node* ll_next_node(struct ll_node *root, struct ll_node *node)
 {
-    if (!node) {
-        /* Bad param provided */
-        return (uintptr_t)NULL;
-    }
+	if (!root || !node) {
+		/* Bad param provided */
+		return NULL;
+	}
 
-    return *(uintptr_t *)(node + offset);
+	if (root == node->next)
+		return NULL;
+
+	return node->next;
 }
 
-int ll_indexof(uintptr_t *root, uintptr_t node, uint32_t offset)
+void ll_deinit(struct ll_node *root)
 {
-    uintptr_t curr=0;
-    int i = 0;
+	if (!root)
+		return;
 
-    if (!root || !node) {
-        /* Bad param provided */
-        return -1;
-    }
+	root->next = NULL;
+	root->prev = NULL;
+}
 
-    if (!*root) {
-        /* Bad param provided */
-        return -1;
-    }
+int ll_remove_node(struct ll_node *node)
+{
+	struct ll_node *prev, *next;
 
-    ll_foreach(*root, curr, offset) {
-        if (curr == node) {
-            /* node found */
-            return i;
-        }
-        i++;
-    }
+	if (!node) {
+		/* Bad param provided */
+		return -1;
+	}
 
-    return -1;
+	prev = node->prev;
+	next = node->next;
+
+	prev->next = next;
+	next->prev = prev;
+
+	node->next = NULL;
+	node->prev = NULL;
+
+	return 0;
+}
+
+int ll_indexof(struct ll_node *root, struct ll_node *node)
+{
+	int i = 0;
+	struct ll_node *curr = NULL;
+
+	if (!root || !node) {
+		/* Bad param provided */
+		return -1;
+	}
+
+	ll_foreach(root, curr) {
+		if (curr == node) {
+			/* node found */
+			return i;
+		}
+		i++;
+	}
+
+	return -1;
 }

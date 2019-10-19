@@ -2,366 +2,323 @@
 #include "ll_uintptr.h"
 #include <stdlib.h>
 #include <stddef.h>
+#include <string.h>
 
-#define NUMBER (4)
+#define NUMBER (10)
 
-typedef struct {
-    int a;
-    uintptr_t next;
-} ll_t;
+struct my_struct {
+        struct ll_node node;
+        int a;
+};
 
-static ll_t list[NUMBER];
+static struct my_struct test_list[NUMBER];
 
 void setUp(void)
 {
-    for(int i = 0; i < NUMBER; ++i) {
-        list[i].next = 0;
-        list[i].a = i+1;
-    }
+        memset(test_list, 0, sizeof(test_list));
+
+        for(int i = 0; i < NUMBER; ++i) {
+                test_list[i].a = i+1;
+        }
 }
 
 void tearDown(void)
 {
+        ll_deinit(&test_list[0].node);
 }
 
-static void link_array(ll_t **root) {
-    for(int i = 0; i < NUMBER; ++i) {
-        ll_append_node((uintptr_t *)root, (uintptr_t)&list[i], offsetof(ll_t, next));
-    }
+static void link_array(struct ll_node *root, struct my_struct *list)
+{
+        for(int i = 0; i < NUMBER; ++i) {
+                ll_append_node(root, &list[i].node);
+        }
 }
 
 #if 0
-static void print_node(ll_t *l)
+static void print_node(struct my_struct *l)
 {
-    printf("\n");
-    printf("NODE, address: %p\n", (uintptr_t)l);
-    printf("next: %p\n", l->next);
-    printf("a: %d\n", l->a);
-    printf("\n");
+        printf("\n");
+        printf("NODE, address: %p\n", &l->node);
+        printf("next: %p\n", l->node.next);
+        printf("prev: %p\n", l->node.prev);
+        printf("a: %d\n", l->a);
+        printf("\n");
 }
 
 static void print_arr(void)
 {
-    for(int i = 0; i < NUMBER; ++i) {
-        print_node(&list[i]);
-    }
+        for(int i = 0; i < NUMBER; ++i) {
+                print_node(&test_list[i]);
+        }
 }
 
-static void print(ll_t *root)
+static void print(struct my_struct *l)
 {
-    ll_t *temp = NULL;
+        struct ll_node *root = &l->node;
+        struct ll_node *temp = root;
 
-    temp = root;
+        while (temp) {
+                print_node((struct my_struct *)temp);
+                temp = temp->next;
 
-    while (temp) {
-        print_node(temp);
-        temp = (ll_t *)temp->next;
-    }
+                if (temp == root)
+                        break;
+        }
 }
 #endif
 
 void test_ll_add_node_paramCheck(void)
 {
-    ll_t *root = NULL;
+        struct ll_node root = { 0 };
+        struct my_struct temp = {
+                .node = (struct ll_node) { 0 },
+                .a = 100,
+        };
 
-    list[0].next = 0;
-    list[0].a = 100;
+        TEST_ASSERT_MESSAGE(ll_append_node(NULL, &temp.node) == -1,
+                            "Passing NULL should result in error code (1)"
+                );
 
-    TEST_ASSERT_MESSAGE(ll_append_node(NULL, (uintptr_t)&list[0], offsetof(ll_t, next)) == -1,
-                        "Passing NULL should result in error code (1)"
-        );
+        TEST_ASSERT_MESSAGE(0 == memcmp(&temp.node,&(struct ll_node) { 0 }, sizeof(struct ll_node)), "node should remain unaltered (1)");
+        TEST_ASSERT_MESSAGE(temp.a == 100, "node should remain unaltered (2)");
 
-    TEST_ASSERT_MESSAGE(list[0].next == 0, "node should remain unaltered (1)");
-    TEST_ASSERT_MESSAGE(list[0].a == 100, "node should remain unaltered (2)");
+        /* Passing valid args, this requires a valid linked list */
+        ll_init(&root);
 
-    TEST_ASSERT_MESSAGE(ll_append_node((uintptr_t *)&root, (uintptr_t)NULL, offsetof(ll_t, next)) == -1,
-                        "Passing NULL should result in error code (2)"
-        );
+        link_array(&root, test_list);
 
-    TEST_ASSERT_MESSAGE(ll_append_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next)) == 0,
-                        "Passing valid args should result in success status code"
-        );
+        TEST_ASSERT_MESSAGE(ll_append_node(&test_list[0].node, NULL) == -1,
+                            "Passing NULL should result in error code (2)"
+                );
+
+        TEST_ASSERT_MESSAGE(ll_append_node(&test_list[0].node, &temp.node) == 0,
+                            "Passing valid args should result in success status code"
+                );
 
 }
 
 void test_ll_remove_node_paramCheck(void)
 {
-    ll_t *root = NULL;
+        struct ll_node root = { 0 };
 
-    TEST_ASSERT_MESSAGE(ll_remove_node(NULL, (uintptr_t)&list[0], offsetof(ll_t, next)) == -1,
-                        "Passing NULL should result in error code (1)"
-        );
-    TEST_ASSERT_MESSAGE(ll_remove_node((uintptr_t *)&root, (uintptr_t)NULL, offsetof(ll_t, next)) == -1,
-                        "Passing NULL should result in error code (2)"
-        );
+        TEST_ASSERT_MESSAGE(ll_remove_node(NULL) == -1,
+                            "Passing NULL should result in error code (1)"
+                );
 
-    TEST_ASSERT_MESSAGE(ll_remove_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next)) == -1,
-                        "Passing pointer to NULL root should result in error code"
-        );
+        /* Passing valid args, this requires a valid linked list */
+        ll_init(&root);
 
-    /* Passing valid args, this requires a valid linked list */
-    link_array(&root);
+        link_array(&root, test_list);
 
-    TEST_ASSERT_MESSAGE(ll_remove_node((uintptr_t *)&root, (uintptr_t)&list[1], offsetof(ll_t, next)) == 0,
-                        "Passing valid args should result in success status code"
-        );
+        TEST_ASSERT_MESSAGE(ll_remove_node(&test_list[1].node) == 0,
+                            "Passing valid args should result in success status code"
+                );
 }
 
 void test_ll_rootInit(void)
 {
-    ll_t *root = NULL;
+        struct ll_node root = { 0 };
 
-    /**
-     *  Some init values
-     *  Fake a link by setting link to a value
-     */
-    list[0].a = 100;
-    list[0].next = 0x12345;
+        TEST_ASSERT_MESSAGE(NULL == root.prev, "Root node prev should be uninitialized at start");
+        TEST_ASSERT_MESSAGE(NULL == root.next, "Root node next should be uninitialized at start");
 
-    ll_append_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next));
+        ll_init(&root);
 
-    TEST_ASSERT_MESSAGE(root == &list[0], "root should be set");
-    TEST_ASSERT_MESSAGE(root->next == 0, "root nextNode should be set to 0");
+        TEST_ASSERT_MESSAGE(&root == root.prev, "Root node prev should be uninitialized at start");
+        TEST_ASSERT_MESSAGE(&root == root.next, "Root node next should be uninitialized at start");
 }
 
 void test_ll_AddingOneElement(void)
 {
-    ll_t *root = NULL;
+        struct ll_node root = { 0 };
+        struct ll_node temp = { 0 };
+        ll_init(&root);
 
-    ll_append_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next));
-    ll_append_node((uintptr_t *)&root, (uintptr_t)&list[1], offsetof(ll_t, next));
+        TEST_ASSERT_MESSAGE(0 == ll_append_node(&root, &temp), "Adding an element should be succesfull");
 
-    TEST_ASSERT_MESSAGE(list[0].next == (uintptr_t)&list[1], "link should be present");
+        TEST_ASSERT_MESSAGE(root.next == &temp, "link should be present");
+        TEST_ASSERT_MESSAGE(root.prev == &temp, "link should be present");
+        TEST_ASSERT_MESSAGE(temp.next == &root, "link should be present");
+        TEST_ASSERT_MESSAGE(temp.prev == &root, "link should be present");
 }
 
-void test_ll_addingSameElement(void)
+static void test_array_links(struct ll_node *root, struct my_struct *list, int number_of_elements)
 {
-    ll_t *root = NULL;
+        for(int i = 0; i < number_of_elements - 1; ++i) {
+                TEST_ASSERT_MESSAGE(list[i].node.next == &list[i+1].node, "link should be fully complete");
+        }
+        TEST_ASSERT_MESSAGE(list[number_of_elements-1].node.next == root, "link should be fully complete");
 
-    ll_append_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next));
-    TEST_ASSERT_MESSAGE(ll_append_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next)) == 0,
-                        "Adding same element should not be an error"
-        );
+        for(int i = number_of_elements-1; i >= 1; --i) {
+                TEST_ASSERT_MESSAGE(list[i].node.prev == &list[i-1].node, "link should be fully complete");
+        }
 
-    TEST_ASSERT_MESSAGE(!list[0].next, "Adding same element should not be possible");
+        TEST_ASSERT_MESSAGE(list[0].node.prev == root, "link should be fully complete");
 }
 
 void test_ll_AddingSeveralNodes(void)
 {
-    ll_t *root = NULL;
+        struct ll_node root = { 0 };
+        ll_init(&root);
 
-    link_array(&root);
+        link_array(&root, test_list);
 
-    for(int i = 0; i < NUMBER - 1; ++i) {
-        TEST_ASSERT_MESSAGE(list[i].next == (uintptr_t)&list[i+1], "link should be fully complete");
-    }
-}
-
-void test_ll_SanityCheckWhenDoingBadRemove(void)
-{
-    ll_t *root = NULL;
-
-    link_array(&root);
-
-    ll_remove_node(NULL, (uintptr_t)&list[1], offsetof(ll_t, next));
-
-    for(int i = 0; i < NUMBER - 1; ++i) {
-        TEST_ASSERT_MESSAGE(list[i].next == (uintptr_t)&list[i+1], "link should still be fully complete");
-    }
-
-    ll_remove_node((uintptr_t *)&root, (uintptr_t)NULL, offsetof(ll_t, next));
-
-    for(int i = 0; i < NUMBER - 1; ++i) {
-        TEST_ASSERT_MESSAGE(list[i].next == (uintptr_t)&list[i+1], "link should still be fully complete");
-    }
+        test_array_links(&root, test_list, NUMBER);
 }
 
 void test_ll_RemovingOneNode(void)
 {
-    ll_t *root = NULL;
+        struct ll_node root = { 0 };
 
-    link_array(&root);
+        ll_init(&root);
+        link_array(&root, test_list);
 
-    TEST_ASSERT_MESSAGE(list[1].next != 0, "Sanity check: Link before removal seems valid");
+        test_array_links(&root, test_list, NUMBER);
 
-    ll_remove_node((uintptr_t *)&root, (uintptr_t)&list[1], offsetof(ll_t, next));
+        ll_remove_node(&test_list[1].node);
 
-    TEST_ASSERT_MESSAGE(list[0].next == (uintptr_t)&list[2],
-                        "removing node that is not root should NOT result in losing link"
-        );
-    TEST_ASSERT_MESSAGE(list[1].next == 0, "Link in removed node should be set to 0");
+        TEST_ASSERT_MESSAGE(test_list[0].node.next == &test_list[2].node,
+                            "removing node that is not root should NOT result in losing link"
+                );
+        TEST_ASSERT_MESSAGE(test_list[1].node.next == 0, "Link in removed node should be set to 0");
 
-    for(int i = 2; i < NUMBER - 1; ++i) {
-        TEST_ASSERT_MESSAGE(list[i].next == (uintptr_t)&list[i+1], "link should still be there");
-    }
-}
-
-void test_ll_RemovingRootNodeShouldResultInNewRoot(void)
-{
-    ll_t *root = NULL;
-
-    link_array(&root);
-
-    ll_remove_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next));
-
-    TEST_ASSERT_MESSAGE(root == &list[1], "removing root should result in next node to be root");
-    for(int i = 1; i < NUMBER - 1; ++i) {
-        TEST_ASSERT_MESSAGE(list[i].next == (uintptr_t)&list[i+1], "link should still be there");
-    }
-}
-
-void test_ll_RemovingUnAddedNode(void)
-{
-    ll_t *root = NULL;
-    ll_t unAddedNode = {
-        .a = 12345,
-        .next = 0x12345,
-    };
-
-    link_array(&root);
-
-    TEST_ASSERT_MESSAGE(ll_remove_node((uintptr_t *)&root, (uintptr_t)&unAddedNode, offsetof(ll_t, next)) == -1,
-                        "Removing non-existant node should result in error code"
-        );
-
-    for(int i = 0; i < NUMBER - 1; ++i) {
-        TEST_ASSERT_MESSAGE(list[i].next == (uintptr_t)&list[i+1], "link should still be there");
-    }
+        for(int i = 2; i < NUMBER - 1; ++i) {
+                TEST_ASSERT_MESSAGE(test_list[i].node.next == &test_list[i+1].node, "link should still be there");
+        }
 }
 
 void test_ll_nextNode_paramCheck(void)
 {
-    ll_t *root = NULL;
+        struct ll_node root = { 0 };
 
-    TEST_ASSERT_MESSAGE(ll_next_node((uintptr_t)NULL, offsetof(ll_t, next)) == (uintptr_t)NULL,
-                        "Passing NULL should return NULL"
-        );
+        TEST_ASSERT_MESSAGE(ll_next_node(&root, NULL) == NULL,
+                            "Passing NULL should return NULL"
+                );
 
-    /* Set list[0] as root, so only one element in linked list */
-    ll_append_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next));
+        ll_init(&root);
+        ll_append_node(&root, &test_list[0].node);
 
-    TEST_ASSERT_MESSAGE(ll_next_node((uintptr_t)root, offsetof(ll_t, next)) == (uintptr_t)NULL,
-                        "Passing valid linked list with only 1 member should result in next node being NULL"
-        );
+        TEST_ASSERT_MESSAGE(ll_next_node(NULL, &test_list[0].node) == NULL,
+                            "Passing NULL should return NULL"
+                );
 
-    ll_append_node((uintptr_t *)&root, (uintptr_t)&list[1], offsetof(ll_t, next));
 
-    TEST_ASSERT_MESSAGE(ll_next_node((uintptr_t)root, offsetof(ll_t, next)) == (uintptr_t)&list[1],
-                        "Passing valid linked list with 2 members should result in next node being the one we just added"
-        );
+        TEST_ASSERT_MESSAGE(ll_next_node(&root, &test_list[0].node) == NULL,
+                            "Passing valid linked list with only 1 member should result in next node being NULL"
+                );
+
+        ll_append_node(&root, &test_list[1].node);
+
+        TEST_ASSERT_MESSAGE(ll_next_node(NULL, &test_list[0].node) == NULL,
+                            "Passing NULL should return NULL"
+                );
+
+        TEST_ASSERT_MESSAGE(ll_next_node(&root, &test_list[0].node) == &test_list[1].node,
+                            "Passing valid linked list with 2 members should result in next node being the one we just added"
+                );
 }
 
 void test_ll_nextNode_TraverseFullList(void)
 {
-    ll_t *root = NULL;
-    ll_t *node = NULL;
+        struct ll_node root = { 0 };
 
-    link_array(&root);
+        ll_init(&root);
+        link_array(&root, test_list);
 
-    for(int i = 0; i < NUMBER - 1; ++i) {
-        node = &list[i];
-        TEST_ASSERT_MESSAGE(ll_next_node((uintptr_t)node, offsetof(ll_t,next)) == (uintptr_t)&list[i+1], "next_node should actually return next node");
-    }
+        for(int i = 0; i < NUMBER - 1; ++i) {
+                TEST_ASSERT_MESSAGE(ll_next_node(&root, &test_list[i].node) == &test_list[i+1].node, "next_node should actually return next node");
+        }
 }
 
 void test_ll_foreach(void)
 {
-    ll_t *root = NULL;
-    ll_t *node = NULL;
-    int i = 0;
+        struct ll_node root = { 0 };
+        struct ll_node *idx = NULL;
+        int i = 0;
 
-    link_array(&root);
+        ll_init(&root);
 
-    ll_foreach(root, node, offsetof(ll_t, next)) {
-        TEST_ASSERT_MESSAGE(node == &list[i], "Foreach should cycle through linked list");
-        i++;
-    }
-    TEST_ASSERT_MESSAGE(i == NUMBER, "Foreach should cycle through whole list");
+        ll_foreach(&root, idx) {
+                TEST_FAIL_MESSAGE("If there are no elements in the list, foreach should not enter the body of the loop");
+                i++;
+        }
+
+        link_array(&root, test_list);
+
+        ll_foreach(&root, idx) {
+                TEST_ASSERT_MESSAGE(idx == &test_list[i].node, "Foreach should cycle through linked list, what node is it pointing to?");
+                i++;
+        }
+        TEST_ASSERT_MESSAGE(i == NUMBER, "Foreach should cycle through whole list (2)");
 }
 
 void test_ll_foreach_safe(void)
 {
-    ll_t *root = NULL;
-    ll_t *node = NULL, *safe_node = NULL;
-    int i = 0;
+        struct ll_node root = { 0 };
+        struct ll_node *idx = NULL;
+        struct ll_node *idx_safe = NULL;
+        int i = 0;
 
-    link_array(&root);
+        ll_init(&root);
 
-    ll_foreach_safe(root, node, safe_node, offsetof(ll_t, next)) {
-        TEST_ASSERT_MESSAGE(node == &list[i], "Foreach should cycle through linked list");
-        i++;
-    }
-    TEST_ASSERT_MESSAGE(i == NUMBER, "Foreach_safe should cycle through whole list");
+        ll_foreach(&root, idx) {
+                TEST_FAIL_MESSAGE("If there are no elements in the list, foreach should not enter the body of the loop");
+                i++;
+        }
+
+        link_array(&root, test_list);
+
+        ll_foreach_safe(&root, idx, idx_safe) {
+                TEST_ASSERT_MESSAGE(idx == &test_list[i].node, "Foreach should cycle through linked list, what node is it pointing to?");
+                i++;
+        }
+
+        TEST_ASSERT_MESSAGE(i == NUMBER, "Foreach_safe should cycle through whole list");
 }
 
 void test_ll_foreach_safe_RemovalOfNode(void)
 {
-    ll_t *root = NULL;
-    ll_t *node = NULL, *safe_node = NULL;
-    int i = 0;
+        struct ll_node root = { 0 };
+        struct ll_node *idx = NULL;
+        struct ll_node *idx_safe = NULL;
+        int i = 0;
 
-    link_array(&root);
+        ll_init(&root);
+        link_array(&root, test_list);
 
-    ll_foreach_safe(root, node, safe_node, offsetof(ll_t, next)) {
-        if (node == &list[1]) {
-            ll_remove_node((uintptr_t *)&root, (uintptr_t)node, offsetof(ll_t, next));
+        ll_foreach_safe(&root, idx, idx_safe) {
+                /* Delete first element */
+                if (i == 0) {
+                        ll_remove_node(idx);
+                }
+                i++;
         }
-        i++;
-    }
-    TEST_ASSERT_MESSAGE(i == NUMBER, "Foreach_safe should cycle through whole list even if we are deleting nodes in the for");
-    TEST_ASSERT_MESSAGE(root = &list[0], "Root should have been maintained");
-    TEST_ASSERT_MESSAGE(root->next  == (uintptr_t)&list[2], "New link should be set");
-}
 
-void test_ll_foreach_safe_RemovalOfRoot(void)
-{
-    ll_t *root = NULL;
-    ll_t *node = NULL, *safe_node = NULL;
-    int i = 0;
+        TEST_ASSERT_MESSAGE(i == NUMBER, "Foreach_safe should cycle through whole list even if we are deleting nodes in the for");
+        TEST_ASSERT_MESSAGE(root.next  == &test_list[1].node, "New 'head' should be the second element since we removed the first one");
 
-    link_array(&root);
+        i = 0;
 
-    ll_foreach_safe(root, node, safe_node, offsetof(ll_t, next)) {
-        if (node == &list[0]) {
-            ll_remove_node((uintptr_t *)&root, (uintptr_t)node, offsetof(ll_t, next));
+        ll_foreach_safe(&root, idx, idx_safe) {
+                i++;
         }
-        i++;
-    }
-    TEST_ASSERT_MESSAGE(i == NUMBER, "Foreach_safe should cycle through whole list even if we are deleting the root in the for");
-    TEST_ASSERT_MESSAGE(root  == &list[1], "New root should be set");
+
+        TEST_ASSERT_MESSAGE(i == NUMBER - 1, "We deleted an element, we should only go through the list one less time now");
 }
 
 void test_ll_indexof_paramCheck(void)
 {
-    ll_t *root = NULL;
+        struct ll_node root = { 0 };
+        struct ll_node temp = { 0 };
 
-    TEST_ASSERT(ll_indexof((uintptr_t *)NULL, (uintptr_t)NULL, offsetof(ll_t, next)) == -1);
-    TEST_ASSERT(ll_indexof((uintptr_t *)&root, (uintptr_t)NULL, offsetof(ll_t, next)) == -1);
-    TEST_ASSERT(ll_indexof((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next)) == -1);
+        ll_init(&root);
 
-    /* set root */
-    ll_append_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next));
+        TEST_ASSERT(ll_indexof(NULL, NULL) == -1);
+        TEST_ASSERT(ll_indexof(&root, NULL) == -1);
+        TEST_ASSERT(ll_indexof(&root, &temp) == -1);
 
-    TEST_ASSERT(ll_indexof((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next)) == 0);
-}
+        /* set root */
+        ll_append_node(&root, &temp);
 
-void test_ll_indexof_elementNotIn(void)
-{
-    ll_t *root = NULL;
-
-    /* set root */
-    ll_append_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next));
-
-    TEST_ASSERT(ll_indexof((uintptr_t *)&root, (uintptr_t)&list[1], offsetof(ll_t, next)) == -1);
-}
-
-void test_ll_indexof_elementIsIn(void)
-{
-    ll_t *root = NULL;
-
-    link_array(&root);
-
-    for(int i = 0; i < NUMBER; ++i) {
-        TEST_ASSERT(ll_indexof((uintptr_t *)&root, (uintptr_t)&list[i], offsetof(ll_t, next)) == i);
-    }
+        TEST_ASSERT(ll_indexof(&root, &temp) == 0);
 }
