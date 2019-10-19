@@ -362,3 +362,17 @@ void test_ll_is_linked(void)
         TEST_ASSERT(ll_is_linked(&root, &temp));
         TEST_ASSERT(ll_is_linked(&root, &temp1));
 }
+
+void test_ll_is_empty(void)
+{
+        struct ll_node root = { 0 };
+        struct ll_node temp = { 0 };
+
+        ll_init(&root);
+
+        TEST_ASSERT(ll_is_empty(&root));
+
+        ll_append_node(&root, &temp);
+
+        TEST_ASSERT_FALSE(ll_is_empty(&root));
+}

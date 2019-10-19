@@ -10,6 +10,11 @@ void ll_init(struct ll_node *root)
         root->prev = root;
 }
 
+bool ll_is_empty(struct ll_node *root)
+{
+        return root == root->next;
+}
+
 int ll_append_node(struct ll_node *root, struct ll_node *new_node)
 {
         if (!root || !new_node) {

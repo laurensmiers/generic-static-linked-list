@@ -32,6 +32,8 @@ int ll_count(struct ll_node *root);
 
 bool ll_is_linked(struct ll_node *root, struct ll_node *node);
 
+bool ll_is_empty(struct ll_node *root);
+
 void ll_deinit(struct ll_node *root);
 
 #endif // _LL_UINTPTR_H
