@@ -355,6 +355,33 @@ void test_ll_is_tail(void)
         TEST_ASSERT(ll_is_tail(&root, &temp1));
 }
 
+void test_ll_is_head(void)
+{
+        struct ll_node root = { 0 };
+        struct ll_node temp = { 0 }, temp1 = { 0 }, temp2 = { 0 };
+
+        ll_init(&root);
+
+        TEST_ASSERT_FALSE(ll_is_head(&root, &temp));
+        TEST_ASSERT_FALSE(ll_is_head(&root, &temp1));
+
+        ll_push_to_tail(&root, &temp);
+
+        TEST_ASSERT(ll_is_head(&root, &temp));
+        TEST_ASSERT_FALSE(ll_is_head(&root, &temp1));
+
+        ll_push_to_tail(&root, &temp1);
+
+        TEST_ASSERT(ll_is_head(&root, &temp));
+        TEST_ASSERT_FALSE(ll_is_head(&root, &temp1));
+
+        ll_push_to_head(&root, &temp2);
+
+        TEST_ASSERT(ll_is_head(&root, &temp2));
+        TEST_ASSERT_FALSE(ll_is_head(&root, &temp));
+        TEST_ASSERT_FALSE(ll_is_head(&root, &temp1));
+}
+
 void test_ll_push_to_head(void)
 {
         struct ll_node root = { 0 };

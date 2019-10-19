@@ -134,6 +134,18 @@ bool ll_is_empty(struct ll_node *root);
 bool ll_is_tail(struct ll_node *root, struct ll_node *node);
 
 /**
+ * Check if a node is the first element in the list
+ * @pre root node initialized with @ref ll_init
+ *
+ * @param[in] The root node of the list
+ * @param[in] The node to check
+ * @return A bool flag
+ * @retval true if the node is the first element/head of the list
+ * @retval false if the node is NOT the first element/head of the list
+ */
+bool ll_is_head(struct ll_node *root, struct ll_node *node);
+
+/**
  * Deinitialize a root node/list
  * @pre root node initialized with @ref ll_init
  *

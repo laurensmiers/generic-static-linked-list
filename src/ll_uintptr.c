@@ -130,6 +130,14 @@ bool ll_is_tail(struct ll_node *root, struct ll_node *node)
         return node->next == root;
 }
 
+bool ll_is_head(struct ll_node *root, struct ll_node *node)
+{
+        if (!root || !node)
+                return 0;
+
+        return node->prev == root;
+}
+
 void ll_deinit(struct ll_node *root)
 {
         if (!root)
