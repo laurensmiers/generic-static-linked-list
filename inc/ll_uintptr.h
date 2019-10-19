@@ -10,7 +10,7 @@ struct ll_node {
 
 void ll_init(struct ll_node *root);
 
-int ll_append_node(struct ll_node *root, struct ll_node *new_node);
+int ll_push_to_tail(struct ll_node *root, struct ll_node *new_node);
 
 int ll_remove_node(struct ll_node *node);
 

@@ -30,7 +30,7 @@ bool ll_is_empty(struct ll_node *root)
         return root == root->next;
 }
 
-int ll_append_node(struct ll_node *root, struct ll_node *new_node)
+int ll_push_to_tail(struct ll_node *root, struct ll_node *new_node)
 {
         if (!root || !new_node) {
                 /* Bad param provided */

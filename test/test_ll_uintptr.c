@@ -30,7 +30,7 @@ void tearDown(void)
 static void link_array(struct ll_node *root, struct my_struct *list)
 {
         for(int i = 0; i < NUMBER; ++i) {
-                ll_append_node(root, &list[i].node);
+                ll_push_to_tail(root, &list[i].node);
         }
 }
 
@@ -75,7 +75,7 @@ void test_ll_add_node_paramCheck(void)
                 .a = 100,
         };
 
-        TEST_ASSERT_MESSAGE(ll_append_node(NULL, &temp.node) == -1,
+        TEST_ASSERT_MESSAGE(ll_push_to_tail(NULL, &temp.node) == -1,
                             "Passing NULL should result in error code (1)"
                 );
 
@@ -87,11 +87,11 @@ void test_ll_add_node_paramCheck(void)
 
         link_array(&root, test_list);
 
-        TEST_ASSERT_MESSAGE(ll_append_node(&test_list[0].node, NULL) == -1,
+        TEST_ASSERT_MESSAGE(ll_push_to_tail(&test_list[0].node, NULL) == -1,
                             "Passing NULL should result in error code (2)"
                 );
 
-        TEST_ASSERT_MESSAGE(ll_append_node(&test_list[0].node, &temp.node) == 0,
+        TEST_ASSERT_MESSAGE(ll_push_to_tail(&test_list[0].node, &temp.node) == 0,
                             "Passing valid args should result in success status code"
                 );
 
@@ -134,7 +134,7 @@ void test_ll_AddingOneElement(void)
         struct ll_node temp = { 0 };
         ll_init(&root);
 
-        TEST_ASSERT_MESSAGE(0 == ll_append_node(&root, &temp), "Adding an element should be succesfull");
+        TEST_ASSERT_MESSAGE(0 == ll_push_to_tail(&root, &temp), "Adding an element should be succesfull");
 
         TEST_ASSERT_MESSAGE(root.next == &temp, "link should be present");
         TEST_ASSERT_MESSAGE(root.prev == &temp, "link should be present");
@@ -196,7 +196,7 @@ void test_ll_nextNode_paramCheck(void)
                 );
 
         ll_init(&root);
-        ll_append_node(&root, &test_list[0].node);
+        ll_push_to_tail(&root, &test_list[0].node);
 
         TEST_ASSERT_MESSAGE(ll_next_node(NULL, &test_list[0].node) == NULL,
                             "Passing NULL should return NULL"
@@ -207,7 +207,7 @@ void test_ll_nextNode_paramCheck(void)
                             "Passing valid linked list with only 1 member should result in next node being NULL"
                 );
 
-        ll_append_node(&root, &test_list[1].node);
+        ll_push_to_tail(&root, &test_list[1].node);
 
         TEST_ASSERT_MESSAGE(ll_next_node(NULL, &test_list[0].node) == NULL,
                             "Passing NULL should return NULL"
@@ -318,7 +318,7 @@ void test_ll_indexof_paramCheck(void)
         TEST_ASSERT(ll_indexof(&root, &temp) == -1);
 
         /* set root */
-        ll_append_node(&root, &temp);
+        ll_push_to_tail(&root, &temp);
 
         TEST_ASSERT(ll_indexof(&root, &temp) == 0);
 }
@@ -333,11 +333,11 @@ void test_ll_count(void)
         TEST_ASSERT(0 == ll_count(NULL));
         TEST_ASSERT(0 == ll_count(&root));
 
-        ll_append_node(&root, &temp);
+        ll_push_to_tail(&root, &temp);
 
         TEST_ASSERT(1 == ll_count(&root));
 
-        ll_append_node(&root, &temp1);
+        ll_push_to_tail(&root, &temp1);
 
         TEST_ASSERT(2 == ll_count(&root));
 }
@@ -352,12 +352,12 @@ void test_ll_is_linked(void)
         TEST_ASSERT_FALSE(ll_is_linked(&root, &temp));
         TEST_ASSERT_FALSE(ll_is_linked(&root, &temp1));
 
-        ll_append_node(&root, &temp);
+        ll_push_to_tail(&root, &temp);
 
         TEST_ASSERT(ll_is_linked(&root, &temp));
         TEST_ASSERT_FALSE(ll_is_linked(&root, &temp1));
 
-        ll_append_node(&root, &temp1);
+        ll_push_to_tail(&root, &temp1);
 
         TEST_ASSERT(ll_is_linked(&root, &temp));
         TEST_ASSERT(ll_is_linked(&root, &temp1));
@@ -372,7 +372,7 @@ void test_ll_is_empty(void)
 
         TEST_ASSERT(ll_is_empty(&root));
 
-        ll_append_node(&root, &temp);
+        ll_push_to_tail(&root, &temp);
 
         TEST_ASSERT_FALSE(ll_is_empty(&root));
 }
@@ -387,12 +387,12 @@ void test_ll_is_tail(void)
         TEST_ASSERT_FALSE(ll_is_tail(&root, &temp));
         TEST_ASSERT_FALSE(ll_is_tail(&root, &temp1));
 
-        ll_append_node(&root, &temp);
+        ll_push_to_tail(&root, &temp);
 
         TEST_ASSERT(ll_is_tail(&root, &temp));
         TEST_ASSERT_FALSE(ll_is_tail(&root, &temp1));
 
-        ll_append_node(&root, &temp1);
+        ll_push_to_tail(&root, &temp1);
 
         TEST_ASSERT_FALSE(ll_is_tail(&root, &temp));
         TEST_ASSERT(ll_is_tail(&root, &temp1));
