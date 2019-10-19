@@ -1,5 +1,4 @@
-#ifndef _LL_UINTPTR_H
-#define _LL_UINTPTR_H
+#pragma once
 
 #include <stdbool.h>
 
@@ -39,5 +38,3 @@ bool ll_is_empty(struct ll_node *root);
 bool ll_is_tail(struct ll_node *root, struct ll_node *node);
 
 void ll_deinit(struct ll_node *root);
-
-#endif // _LL_UINTPTR_H
