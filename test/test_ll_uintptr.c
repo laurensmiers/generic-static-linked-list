@@ -187,49 +187,6 @@ void test_ll_RemovingOneNode(void)
         }
 }
 
-void test_ll_nextNode_paramCheck(void)
-{
-        struct ll_node root = { 0 };
-
-        TEST_ASSERT_MESSAGE(ll_next_node(&root, NULL) == NULL,
-                            "Passing NULL should return NULL"
-                );
-
-        ll_init(&root);
-        ll_push_to_tail(&root, &test_list[0].node);
-
-        TEST_ASSERT_MESSAGE(ll_next_node(NULL, &test_list[0].node) == NULL,
-                            "Passing NULL should return NULL"
-                );
-
-
-        TEST_ASSERT_MESSAGE(ll_next_node(&root, &test_list[0].node) == NULL,
-                            "Passing valid linked list with only 1 member should result in next node being NULL"
-                );
-
-        ll_push_to_tail(&root, &test_list[1].node);
-
-        TEST_ASSERT_MESSAGE(ll_next_node(NULL, &test_list[0].node) == NULL,
-                            "Passing NULL should return NULL"
-                );
-
-        TEST_ASSERT_MESSAGE(ll_next_node(&root, &test_list[0].node) == &test_list[1].node,
-                            "Passing valid linked list with 2 members should result in next node being the one we just added"
-                );
-}
-
-void test_ll_nextNode_TraverseFullList(void)
-{
-        struct ll_node root = { 0 };
-
-        ll_init(&root);
-        link_array(&root, test_list);
-
-        for(int i = 0; i < NUMBER - 1; ++i) {
-                TEST_ASSERT_MESSAGE(ll_next_node(&root, &test_list[i].node) == &test_list[i+1].node, "next_node should actually return next node");
-        }
-}
-
 void test_ll_foreach(void)
 {
         struct ll_node root = { 0 };

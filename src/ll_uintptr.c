@@ -50,28 +50,6 @@ int ll_push_to_head(struct ll_node *root, struct ll_node *new_node)
         return _insert(new_node, root, root->next);
 }
 
-struct ll_node* ll_next_node(struct ll_node *root, struct ll_node *node)
-{
-        if (!root || !node) {
-                /* Bad param provided */
-                return NULL;
-        }
-
-        if (root == node->next)
-                return NULL;
-
-        return node->next;
-}
-
-void ll_deinit(struct ll_node *root)
-{
-        if (!root)
-                return;
-
-        root->next = NULL;
-        root->prev = NULL;
-}
-
 int ll_remove_node(struct ll_node *node)
 {
         struct ll_node *prev, *next;
@@ -150,4 +128,13 @@ bool ll_is_tail(struct ll_node *root, struct ll_node *node)
                 return 0;
 
         return node->next == root;
+}
+
+void ll_deinit(struct ll_node *root)
+{
+        if (!root)
+                return;
+
+        root->next = NULL;
+        root->prev = NULL;
 }

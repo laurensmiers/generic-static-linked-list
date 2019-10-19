@@ -12,7 +12,7 @@
 #define ll_foreach(root, idx)                               \
                 for ((idx) = (root)->next;                  \
                      (idx) != (root) && (idx) != NULL;      \
-                     (idx) = ll_next_node((root),(idx)))
+                     (idx) = (idx)->next)
 
 /**
  * A for-each convience macro which is safe to use to manipulate the list
@@ -22,7 +22,7 @@
  */
 #define ll_foreach_safe(root, idx, idx2)                                                              \
                 for ((idx) = (root)->next;                                                            \
-                     (idx) != (root) && (idx) != NULL && (((idx2) = ll_next_node((root), (idx))),1);  \
+                     (idx) != (root) && (idx) != NULL && (((idx2) = (idx)->next),1); \
                      (idx) = (idx2))
 
 struct ll_node {
@@ -76,8 +76,6 @@ int ll_push_to_head(struct ll_node *root, struct ll_node *new_node);
  * @retval < 0 if an error occurs (bad params, ...)
  */
 int ll_remove_node(struct ll_node *node);
-
-struct ll_node* ll_next_node(struct ll_node *root, struct ll_node *node);
 
 /**
  * Retrieve the next element in the list
