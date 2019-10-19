@@ -1,6 +1,21 @@
 #include "ll_uintptr.h"
 #include <stddef.h>
 
+static int _insert(struct ll_node *new, struct ll_node *prev, struct ll_node *next)
+{
+        if (!new || !prev || !next) {
+                /* Bad param provided */
+                return -1;
+        }
+
+        new->next = next;
+        new->prev = prev;
+        prev->next = new;
+        next->prev = new;
+
+	return 0;
+}
+
 void ll_init(struct ll_node *root)
 {
         if (!root)
@@ -22,14 +37,7 @@ int ll_append_node(struct ll_node *root, struct ll_node *new_node)
                 return -1;
         }
 
-        struct ll_node *tail = root->prev;
-
-        new_node->next = root;
-        new_node->prev = tail;
-        tail->next = new_node;
-        root->prev = new_node;
-
-        return 0;
+	return _insert(new_node, root->prev, root);
 }
 
 struct ll_node* ll_next_node(struct ll_node *root, struct ll_node *node)
