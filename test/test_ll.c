@@ -401,3 +401,25 @@ void test_ll_push_to_head(void)
         TEST_ASSERT(temp1.next == &temp);
         TEST_ASSERT(temp.prev == &temp1);
 }
+
+void test_ll_get_head(void)
+{
+        struct ll_node root = { 0 };
+        struct ll_node temp = { 0 }, temp1 = { 0 }, temp2 = { 0 };
+
+        ll_init(&root);
+
+        TEST_ASSERT(NULL == ll_get_head(&root));
+
+        ll_push_to_head(&root, &temp);
+
+        TEST_ASSERT(&temp == ll_get_head(&root));
+
+        ll_push_to_head(&root, &temp1);
+
+        TEST_ASSERT(&temp1 == ll_get_head(&root));
+
+        ll_push_to_tail(&root, &temp2);
+
+        TEST_ASSERT(&temp1 == ll_get_head(&root));
+}

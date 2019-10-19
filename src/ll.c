@@ -138,6 +138,17 @@ bool ll_is_head(struct ll_node *root, struct ll_node *node)
         return node->prev == root;
 }
 
+struct ll_node* ll_get_head(struct ll_node *root)
+{
+        if (!root)
+                return 0;
+
+	if (ll_is_empty(root))
+		return NULL;
+
+	return root->next;
+}
+
 void ll_deinit(struct ll_node *root)
 {
         if (!root)

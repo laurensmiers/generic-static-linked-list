@@ -146,6 +146,16 @@ bool ll_is_tail(struct ll_node *root, struct ll_node *node);
 bool ll_is_head(struct ll_node *root, struct ll_node *node);
 
 /**
+ * Get the head of the list
+ * @pre root node initialized with @ref ll_init
+ *
+ * @param[in] The root node of the list
+ * @return A pointer to the head of the list
+ * @retval NULL if the list is empty or an error occured (bad params...)
+ */
+struct ll_node* ll_get_head(struct ll_node *root);
+
+/**
  * Deinitialize a root node/list
  * @pre root node initialized with @ref ll_init
  *
