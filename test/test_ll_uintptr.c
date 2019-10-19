@@ -376,3 +376,24 @@ void test_ll_is_empty(void)
 
         TEST_ASSERT_FALSE(ll_is_empty(&root));
 }
+
+void test_ll_is_tail(void)
+{
+        struct ll_node root = { 0 };
+        struct ll_node temp = { 0 }, temp1 = { 0 };
+
+        ll_init(&root);
+
+        TEST_ASSERT_FALSE(ll_is_tail(&root, &temp));
+        TEST_ASSERT_FALSE(ll_is_tail(&root, &temp1));
+
+        ll_append_node(&root, &temp);
+
+        TEST_ASSERT(ll_is_tail(&root, &temp));
+        TEST_ASSERT_FALSE(ll_is_tail(&root, &temp1));
+
+        ll_append_node(&root, &temp1);
+
+        TEST_ASSERT_FALSE(ll_is_tail(&root, &temp));
+        TEST_ASSERT(ll_is_tail(&root, &temp1));
+}

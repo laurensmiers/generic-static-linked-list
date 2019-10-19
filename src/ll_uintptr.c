@@ -125,3 +125,11 @@ bool ll_is_linked(struct ll_node *root, struct ll_node *node)
 
         return false;
 }
+
+bool ll_is_tail(struct ll_node *root, struct ll_node *node)
+{
+        if (!root || !node)
+                return 0;
+
+        return node->next == root;
+}
