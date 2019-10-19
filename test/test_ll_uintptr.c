@@ -67,18 +67,18 @@ void test_ll_add_node_paramCheck(void)
     list[0].next = 0;
     list[0].a = 100;
 
-    TEST_ASSERT_MESSAGE(ll_append_node(NULL, (uintptr_t)&list[0], offsetof(ll_t, next)) == ll_status_Error,
+    TEST_ASSERT_MESSAGE(ll_append_node(NULL, (uintptr_t)&list[0], offsetof(ll_t, next)) == -1,
                         "Passing NULL should result in error code (1)"
         );
 
     TEST_ASSERT_MESSAGE(list[0].next == 0, "node should remain unaltered (1)");
     TEST_ASSERT_MESSAGE(list[0].a == 100, "node should remain unaltered (2)");
 
-    TEST_ASSERT_MESSAGE(ll_append_node((uintptr_t *)&root, (uintptr_t)NULL, offsetof(ll_t, next)) == ll_status_Error,
+    TEST_ASSERT_MESSAGE(ll_append_node((uintptr_t *)&root, (uintptr_t)NULL, offsetof(ll_t, next)) == -1,
                         "Passing NULL should result in error code (2)"
         );
 
-    TEST_ASSERT_MESSAGE(ll_append_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next)) == ll_status_OK,
+    TEST_ASSERT_MESSAGE(ll_append_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next)) == 0,
                         "Passing valid args should result in success status code"
         );
 
@@ -88,21 +88,21 @@ void test_ll_remove_node_paramCheck(void)
 {
     ll_t *root = NULL;
 
-    TEST_ASSERT_MESSAGE(ll_remove_node(NULL, (uintptr_t)&list[0], offsetof(ll_t, next)) == ll_status_Error,
+    TEST_ASSERT_MESSAGE(ll_remove_node(NULL, (uintptr_t)&list[0], offsetof(ll_t, next)) == -1,
                         "Passing NULL should result in error code (1)"
         );
-    TEST_ASSERT_MESSAGE(ll_remove_node((uintptr_t *)&root, (uintptr_t)NULL, offsetof(ll_t, next)) == ll_status_Error,
+    TEST_ASSERT_MESSAGE(ll_remove_node((uintptr_t *)&root, (uintptr_t)NULL, offsetof(ll_t, next)) == -1,
                         "Passing NULL should result in error code (2)"
         );
 
-    TEST_ASSERT_MESSAGE(ll_remove_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next)) == ll_status_Error,
+    TEST_ASSERT_MESSAGE(ll_remove_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next)) == -1,
                         "Passing pointer to NULL root should result in error code"
         );
 
     /* Passing valid args, this requires a valid linked list */
     link_array(&root);
 
-    TEST_ASSERT_MESSAGE(ll_remove_node((uintptr_t *)&root, (uintptr_t)&list[1], offsetof(ll_t, next)) == ll_status_OK,
+    TEST_ASSERT_MESSAGE(ll_remove_node((uintptr_t *)&root, (uintptr_t)&list[1], offsetof(ll_t, next)) == 0,
                         "Passing valid args should result in success status code"
         );
 }
@@ -139,7 +139,7 @@ void test_ll_addingSameElement(void)
     ll_t *root = NULL;
 
     ll_append_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next));
-    TEST_ASSERT_MESSAGE(ll_append_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next)) == ll_status_OK,
+    TEST_ASSERT_MESSAGE(ll_append_node((uintptr_t *)&root, (uintptr_t)&list[0], offsetof(ll_t, next)) == 0,
                         "Adding same element should not be an error"
         );
 
@@ -220,7 +220,7 @@ void test_ll_RemovingUnAddedNode(void)
 
     link_array(&root);
 
-    TEST_ASSERT_MESSAGE(ll_remove_node((uintptr_t *)&root, (uintptr_t)&unAddedNode, offsetof(ll_t, next)) == ll_status_Error,
+    TEST_ASSERT_MESSAGE(ll_remove_node((uintptr_t *)&root, (uintptr_t)&unAddedNode, offsetof(ll_t, next)) == -1,
                         "Removing non-existant node should result in error code"
         );
 
@@ -365,4 +365,3 @@ void test_ll_indexof_elementIsIn(void)
         TEST_ASSERT(ll_indexof((uintptr_t *)&root, (uintptr_t)&list[i], offsetof(ll_t, next)) == i);
     }
 }
-
