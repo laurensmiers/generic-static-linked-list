@@ -13,7 +13,7 @@ static int _insert(struct ll_node *new, struct ll_node *prev, struct ll_node *ne
         prev->next = new;
         next->prev = new;
 
-	return 0;
+        return 0;
 }
 
 void ll_init(struct ll_node *root)
@@ -37,7 +37,17 @@ int ll_push_to_tail(struct ll_node *root, struct ll_node *new_node)
                 return -1;
         }
 
-	return _insert(new_node, root->prev, root);
+        return _insert(new_node, root->prev, root);
+}
+
+int ll_push_to_head(struct ll_node *root, struct ll_node *new_node)
+{
+        if (!root || !new_node) {
+                /* Bad param provided */
+                return -1;
+        }
+
+        return _insert(new_node, root, root->next);
 }
 
 struct ll_node* ll_next_node(struct ll_node *root, struct ll_node *node)

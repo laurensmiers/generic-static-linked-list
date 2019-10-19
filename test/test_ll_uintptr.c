@@ -397,3 +397,23 @@ void test_ll_is_tail(void)
         TEST_ASSERT_FALSE(ll_is_tail(&root, &temp));
         TEST_ASSERT(ll_is_tail(&root, &temp1));
 }
+
+void test_ll_push_to_head(void)
+{
+        struct ll_node root = { 0 };
+        struct ll_node temp = { 0 }, temp1 = { 0 };
+
+        ll_init(&root);
+
+        ll_push_to_head(&root, &temp);
+
+        TEST_ASSERT(root.next == &temp);
+        TEST_ASSERT(temp.prev == &root);
+
+        ll_push_to_head(&root, &temp1);
+
+        TEST_ASSERT(root.next == &temp1);
+        TEST_ASSERT(temp1.prev == &root);
+        TEST_ASSERT(temp1.next == &temp);
+        TEST_ASSERT(temp.prev == &temp1);
+}
