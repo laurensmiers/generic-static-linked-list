@@ -3,6 +3,16 @@
 
 #include <stdbool.h>
 
+#define ll_foreach(root, idx)                               \
+                for ((idx) = (root)->next;                  \
+                     (idx) != (root) && (idx) != NULL;      \
+                     (idx) = ll_next_node((root),(idx)))
+
+#define ll_foreach_safe(root, idx, idx2)                                                              \
+                for ((idx) = (root)->next;                                                            \
+                     (idx) != (root) && (idx) != NULL && (((idx2) = ll_next_node((root), (idx))),1);  \
+                     (idx) = (idx2))
+
 struct ll_node {
         struct ll_node *next;
         struct ll_node *prev;
@@ -19,16 +29,6 @@ int ll_remove_node(struct ll_node *node);
 struct ll_node* ll_next_node(struct ll_node *root, struct ll_node *node);
 
 int ll_indexof(struct ll_node *root, struct ll_node *node);
-
-#define ll_foreach(root, idx)                               \
-                for ((idx) = (root)->next;                                                               \
-                         (idx) != (root) && (idx) != NULL;                                               \
-                         (idx) = ll_next_node((root),(idx)))
-
-#define ll_foreach_safe(root, idx, idx2)                        \
-    for ((idx) = (root)->next;                                                \
-         (idx) != (root) && (idx) != NULL && (((idx2) = ll_next_node((root), (idx))),1); \
-         (idx) = (idx2))
 
 int ll_count(struct ll_node *root);
 
