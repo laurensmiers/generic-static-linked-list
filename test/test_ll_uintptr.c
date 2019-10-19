@@ -322,3 +322,22 @@ void test_ll_indexof_paramCheck(void)
 
         TEST_ASSERT(ll_indexof(&root, &temp) == 0);
 }
+
+void test_ll_count(void)
+{
+        struct ll_node root = { 0 };
+        struct ll_node temp = { 0 }, temp1 = { 0 };
+
+        ll_init(&root);
+
+        TEST_ASSERT(0 == ll_count(NULL));
+        TEST_ASSERT(0 == ll_count(&root));
+
+        ll_append_node(&root, &temp);
+
+        TEST_ASSERT(1 == ll_count(&root));
+
+        ll_append_node(&root, &temp1);
+
+        TEST_ASSERT(2 == ll_count(&root));
+}

@@ -28,7 +28,7 @@ int ll_indexof(struct ll_node *root, struct ll_node *node);
          (idx) != (root) && (idx) != NULL && (((idx2) = ll_next_node((root), (idx))),1); \
          (idx) = (idx2))
 
-/* int ll_count(struct ll_node *root); */
+int ll_count(struct ll_node *root);
 
 /* bool ll_is_linked(struct ll_node *root, struct ll_node *node); */
 
