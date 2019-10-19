@@ -30,7 +30,7 @@ int ll_indexof(struct ll_node *root, struct ll_node *node);
 
 int ll_count(struct ll_node *root);
 
-/* bool ll_is_linked(struct ll_node *root, struct ll_node *node); */
+bool ll_is_linked(struct ll_node *root, struct ll_node *node);
 
 void ll_deinit(struct ll_node *root);
 

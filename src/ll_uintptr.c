@@ -105,3 +105,18 @@ int ll_count(struct ll_node *root)
 
         return count;
 }
+
+bool ll_is_linked(struct ll_node *root, struct ll_node *node)
+{
+        struct ll_node *temp = NULL;
+
+        if (!root || !node)
+                return 0;
+
+        ll_foreach(root, temp) {
+                if (temp == node)
+                        return true;
+        }
+
+        return false;
+}

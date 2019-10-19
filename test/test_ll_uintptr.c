@@ -341,3 +341,24 @@ void test_ll_count(void)
 
         TEST_ASSERT(2 == ll_count(&root));
 }
+
+void test_ll_is_linked(void)
+{
+        struct ll_node root = { 0 };
+        struct ll_node temp = { 0 }, temp1 = { 0 };
+
+        ll_init(&root);
+
+        TEST_ASSERT_FALSE(ll_is_linked(&root, &temp));
+        TEST_ASSERT_FALSE(ll_is_linked(&root, &temp1));
+
+        ll_append_node(&root, &temp);
+
+        TEST_ASSERT(ll_is_linked(&root, &temp));
+        TEST_ASSERT_FALSE(ll_is_linked(&root, &temp1));
+
+        ll_append_node(&root, &temp1);
+
+        TEST_ASSERT(ll_is_linked(&root, &temp));
+        TEST_ASSERT(ll_is_linked(&root, &temp1));
+}
